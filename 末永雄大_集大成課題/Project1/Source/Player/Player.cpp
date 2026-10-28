@@ -5,8 +5,8 @@
 
 //プレイヤー設定関連
 #define PLAYER_DEFAULT_POS_X (100.0f)
-#define PLAYER_DEFAULT_POS_Y (600.0f)
-#define PLAYER_MOVE_SPEED (4.0f)
+#define PLAYER_DEFAULT_POS_Y (300.0f)
+#define PLAYER_MOVE_SPEED (1.0f)
 
 //ジャンプ力
 #define PLAYER_JUMP_POWER (12.0f)
@@ -37,32 +37,32 @@ void StartPlayer()
 
 void StepPlayer()
 {
-	//死んでたら何もしない
-	if (!g_PlayerData.active)
-	{
-		return;
-	}
+    if (!g_PlayerData.active)
+    {
+        return;
+    }
 
-	//X移動量は毎回リセット
+	// X移動量は毎回リセットする
 	g_PlayerData.move.x = 0.0f;
 
-	//Y移動量に重力を反映
+	// Y移動量に重力を反映
 	g_PlayerData.move.y += PLAYER_GRAVITY;
 
-	//左右
+	//左右移動
 	if (IsInputKey(KEY_RIGHT))
 	{
 		g_PlayerData.move.x = PLAYER_MOVE_SPEED;
 	}
+
 	if (IsInputKey(KEY_LEFT))
 	{
 		g_PlayerData.move.x = -PLAYER_MOVE_SPEED;
 	}
-	//ジャンプ
-	if (IsInputKey(KEY_UP))
-	{
+
+    if (IsTriggerKey(KEY_UP))
+    {
 		g_PlayerData.move.y = -PLAYER_JUMP_POWER;
-	}
+    }
 }
 
 void UpdatePlayer()
@@ -76,7 +76,15 @@ void UpdatePlayer()
 
 void DrawPlayer()
 {
-	
+	//死んでたら処理しない
+	if (!g_PlayerData.active) return;
+
+	DrawGraph(
+		(int)g_PlayerData.pos.x,
+		(int)g_PlayerData.pos.y,
+		g_PlayerData.handle,
+		TRUE
+	);
 }
 
 void FinPlayer()
@@ -84,7 +92,7 @@ void FinPlayer()
 	DeleteGraph(g_PlayerData.handle);
 }
 
-//PlayerData GetPlayer()
-//{
-//	
-//}
+PlayerData GetPlayer()
+{
+	return g_PlayerData;
+}

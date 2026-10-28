@@ -9,10 +9,10 @@
 //プレイヤーデータ
 struct PlayerData
 {
-	int handle;
+	int handle;		//画像
 	bool active;	//生存フラグ
-	VECTOR pos;
-	VECTOR move;
+	VECTOR pos;		//座標
+	VECTOR move;	//移動量
 };
 
 //関数のプロトタイプ宣言

@@ -1,6 +1,8 @@
 ﻿#include"DxLib.h" 
 #include "Map/MapManager.h"
 #include "Player/Player.h"
+#include "Input/Input.h"
+#include "Camera/Camera.h"
 
 //プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -11,6 +13,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 	}
 	InitMap();
 	InitPlayer();
+	InitCamera();
 	
 	LoadMap();
 	LoadPlayer();
@@ -28,11 +31,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 
 		StartMap();
 		StepPlayer();
+		StepCamera();
 
 		UpdatePlayer();
+		UpdateInput();
 		
         DrawMap();
 		DrawPlayer();
+		DrawCamera();
 
 		//エスケープキーで終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) break;

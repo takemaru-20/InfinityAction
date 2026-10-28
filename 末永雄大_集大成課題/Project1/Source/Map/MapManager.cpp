@@ -2,6 +2,7 @@
 #include "MapParameter.h"
 #include "MapChip.h"
 #include "Block.h"
+#include "../Player/Player.h"
 //#include "../Player/Player.h"
 
 // キャラクターの周囲何マスまでチェックするか
@@ -37,8 +38,8 @@ void FinMap()
 //{
 //	PlayerData player = GetPlayer();
 //	// プレイヤーの足元の座標をマップチップのインデックスに変換
-//	int playerX = (int)(player.posX / MAP_CHIP_WIDTH);
-//	int playerY = (int)((player.posY + PLAYER_HEIGHT) / MAP_CHIP_HEIGHT);
+//	int playerX = (int)(player.pos.x / MAP_CHIP_WIDTH);
+//	int playerY = (int)((player.pos.y + PLAYER_HEIGHT) / MAP_CHIP_HEIGHT);
 //	// プレイヤーの左上にあるマップチップインデックス
 //	int left = playerX - CHECK_ROUND_NUM;
 //	int top = playerY - CHECK_ROUND_NUM;
