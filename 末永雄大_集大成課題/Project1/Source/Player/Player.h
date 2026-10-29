@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../Map/MapParameter.h"
+#include "../Collision/CollisionParameter.h"
 
 //プレイヤーサイズ
 #define PLAYER_WIDTH	(72.0f)
@@ -11,8 +12,8 @@ struct PlayerData
 {
 	int handle;		//画像
 	bool active;	//生存フラグ
-	VECTOR pos;		//座標
-	VECTOR move;	//移動量
+	Body body;		// 当たり判定ボディ
+
 };
 
 //関数のプロトタイプ宣言

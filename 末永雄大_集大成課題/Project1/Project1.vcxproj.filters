@@ -28,6 +28,9 @@
     <Filter Include="Source\Collision">
       <UniqueIdentifier>{56724bd2-7397-4ac4-8910-9b2bdda67fd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Eneny">
+      <UniqueIdentifier>{d29e8bfd-f2f3-42a9-a945-24b5a6759fce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -59,6 +62,12 @@
     </ClCompile>
     <ClCompile Include="Source\Collision\Collision.cpp">
       <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy\Nyanone .cpp">
+      <Filter>Source\Eneny</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy\Enemy.cpp">
+      <Filter>Source\Eneny</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="Source\Collision\CollisionParameter.h">
       <Filter>Source\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy\Nyanone.h">
+      <Filter>Source\Eneny</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy\Enemy.h">
+      <Filter>Source\Eneny</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy\Enemyparameter.h">
+      <Filter>Source\Eneny</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

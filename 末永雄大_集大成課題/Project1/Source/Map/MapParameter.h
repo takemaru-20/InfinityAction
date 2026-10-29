@@ -11,6 +11,8 @@ enum MapChipType
 {
 	MAP_CHIP_NONE,
 	NORMAL_BLOCK,
+	NYANONE_SPAWN,
+
 	BLOCK_TYPE_MAX,
 };
 
@@ -20,6 +22,8 @@ struct BlockData
 	int handle;
 	MapChipType type;
 	VECTOR pos;
+	float width;
+	float height;
 };
 
 struct MapChipData

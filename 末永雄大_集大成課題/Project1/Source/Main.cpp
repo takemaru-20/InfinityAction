@@ -3,6 +3,7 @@
 #include "Player/Player.h"
 #include "Input/Input.h"
 #include "Camera/Camera.h"
+#include "Enemy/Enemy.h"
 
 //プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -14,11 +15,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 	InitMap();
 	InitPlayer();
 	InitCamera();
-	
+	InitEnemy();
+
 	LoadMap();
 	LoadPlayer();
+	LoadEnemy();
 
 	StartPlayer();
+	StarEnemy();
 	
 	//描画先を裏画面にする
 	SetDrawScreen (DX_SCREEN_BACK);
@@ -32,13 +36,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 		StartMap();
 		StepPlayer();
 		StepCamera();
+		StarEnemy();
 
 		UpdatePlayer();
 		UpdateInput();
+		UpdateEnemy();
 		
         DrawMap();
 		DrawPlayer();
 		DrawCamera();
+		DrawEnemy();
 
 		//エスケープキーで終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) break;
@@ -48,6 +55,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 	}
 
 	FinPlayer();
+	FinEnemy();
 
 	DxLib_End();     //DXライブラリの終了処理
 

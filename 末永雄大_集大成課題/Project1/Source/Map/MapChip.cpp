@@ -3,6 +3,7 @@
 #include "../GameSetting/GameSetting.h"
 #include "MapParameter.h"
 #include "Block.h"
+#include "../Enemy/Nyanone.h"
 
 MapChipData g_MapChip[MAP_CHIP_Y_NUM][MAP_CHIP_X_NUM] = { 0 };
 
@@ -24,6 +25,7 @@ void LoadMapChipData()
 	}
 }
 
+
 void CreateMap()
 {
 	for (int i = 0; i < MAP_CHIP_Y_NUM; i++)
@@ -38,11 +40,20 @@ void CreateMap()
 
 			//インデックスから座標を計算
 			VECTOR pos = VGet(j * MAP_CHIP_WIDTH, i * MAP_CHIP_HEIGHT, 0.0f);
+
+			//Nyanone配置
+			if (type == NYANONE_SPAWN)
+			{
+				SpawnNyanone(pos.x, pos.y);
+				continue;
+			}
+
 			//生成したブロックはMapChipDataで参照しておく
 			g_MapChip[i][j].data = CreateBlock(type, pos);
 		}
 	}
 }
+
 
 MapChipData GetMapChipData(int x, int y)
 {

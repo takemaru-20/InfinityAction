@@ -137,6 +137,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Camera\Camara.cpp" />
     <ClCompile Include="Source\Collision\Collision.cpp" />
+    <ClCompile Include="Source\Enemy\Enemy.cpp" />
+    <ClCompile Include="Source\Enemy\Nyanone .cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Map\Block.cpp" />
@@ -150,6 +152,9 @@
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Collision\Collision.h" />
     <ClInclude Include="Source\Collision\CollisionParameter.h" />
+    <ClInclude Include="Source\Enemy\Enemy.h" />
+    <ClInclude Include="Source\Enemy\Enemyparameter.h" />
+    <ClInclude Include="Source\Enemy\Nyanone.h" />
     <ClInclude Include="Source\GameSetting\GameSetting.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Map\Block.h" />
