@@ -12,3 +12,9 @@ void FinNyanone();
 
 // マップから敵を生成
 void SpawnNyanone(float x, float y);
+
+EnemyNyanoneData* GetNyanone();
+
+//当たり判定
+void oneHitPlayer(int index);
+void oneHitPlayerBullet(int index);

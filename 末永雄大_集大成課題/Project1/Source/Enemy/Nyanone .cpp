@@ -34,13 +34,11 @@ void InitNyanone()
 
 void LoadNyanone()
 {
-	g_NyanoneHandle =
-		LoadGraph("Data/Enemy/Nyanone.png");
+	g_NyanoneHandle = LoadGraph("Data/Enemy/Nyanone.png");
 
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++)
 	{
-		g_NyanoneData[i].handle =
-			g_NyanoneHandle;
+		g_NyanoneData[i].handle = g_NyanoneHandle;
 	}
 }
 
@@ -52,8 +50,7 @@ void SpawnNyanone(float x, float y)
 {
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++)
 	{
-		EnemyNyanoneData* one =
-			&g_NyanoneData[i];
+		EnemyNyanoneData* one = &g_NyanoneData[i];
 
 		// 既に使われている
 		if (one->active)
@@ -77,10 +74,16 @@ void SpawnNyanone(float x, float y)
 	}
 }
 
+EnemyNyanoneData* GetNyanone()
+{
+	return g_NyanoneData;
+}
+
+
+
 void StepNyanone()
 {
-	EnemyNyanoneData* one =
-		g_NyanoneData;
+	EnemyNyanoneData* one = g_NyanoneData;
 
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
 	{
@@ -97,8 +100,7 @@ void StepNyanone()
 
 void UpdateNyanone()
 {
-	EnemyNyanoneData* one =
-		g_NyanoneData;
+	EnemyNyanoneData* one = g_NyanoneData;
 
 	for (int i = 0;
 		i < ENEMY_NYANONE_MAX;
@@ -135,4 +137,14 @@ void DrawNyanone()
 void FinNyanone()
 {
 	DeleteGraph(g_NyanoneHandle);
+}
+
+void oneHitPlayer(int index)
+{
+	g_NyanoneData[index].active = false;
+}
+
+void oneHitPlayerBullet(int index)
+{
+	g_NyanoneData[index].active = false;
 }

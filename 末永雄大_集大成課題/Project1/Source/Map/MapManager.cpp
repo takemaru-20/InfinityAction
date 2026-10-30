@@ -4,7 +4,6 @@
 #include "Block.h"
 #include "../Player/Player.h"
 #include "../Collision/Collision.h"
-//#include "../Player/Player.h"
 
 // キャラクターの周囲何マスまでチェックするか
 #define CHECK_ROUND_NUM (2)
@@ -47,34 +46,52 @@ void MoveWithMapCollision(Body* body)
 		{
 			// マップチップ取得
 			MapChipData mapChipData = GetMapChipData(x, y);
-			// マップチップが0の場合は何もない
-			if (mapChipData.mapChip == 0) continue;
+
+			// NORMAL_BLOCK以外は当たり判定しない
+			if (mapChipData.mapChip != NORMAL_BLOCK)
+			{
+				continue;
+			}
 
 			// ブロックを取り出して当たり判定
 			BlockData* block = mapChipData.data;
+
+			// 念のためNULLチェック
+			if (block == nullptr)
+			{
+				continue;
+			}
+
 			// 当たり判定
-			if (CheckSquareSquare(body->pos.x, body->pos.y, body->width, body->height,
-				block->pos.x, block->pos.y, block->width, block->height))
+			if (CheckSquareSquare(
+				body->pos.x,
+				body->pos.y,
+				body->width,
+				body->height,
+				block->pos.x,
+				block->pos.y,
+				block->width,
+				block->height))
 			{
 				// 左からあたったか
 				if (body->move.x > 0.0f)
 				{
 					// 左に押し出す
-					//body->pos.x = block->pos.x - body->width;
-					body->pos.x -= (body->pos.x + block->width) - block->pos.x;
+					body->pos.x -=
+						(body->pos.x + body->width) - block->pos.x;
 				}
+
 				// 右からあたったか
 				else if (body->move.x < 0.0f)
 				{
 					// 右に押し出す
-					//body->pos.x = block->pos.x + body->width;
-					body->pos.x += (block->pos.x + block->width) - body->pos.x;
+					body->pos.x +=
+						(block->pos.x + block->width) - body->pos.x;
 				}
 
 				// 移動量は0にする
 				body->move.x = 0.0f;
 			}
-
 		}
 	}
 
@@ -88,36 +105,55 @@ void MoveWithMapCollision(Body* body)
 		{
 			// マップチップ取得
 			MapChipData mapChipData = GetMapChipData(x, y);
-			// マップチップが0の場合は何もない
-			if (mapChipData.mapChip == 0) continue;
+
+			// NORMAL_BLOCK以外は当たり判定しない
+			if (mapChipData.mapChip != NORMAL_BLOCK)
+			{
+				continue;
+			}
 
 			// ブロックを取り出して当たり判定
 			BlockData* block = mapChipData.data;
+
+			// 念のためNULLチェック
+			if (block == nullptr)
+			{
+				continue;
+			}
+
 			// 当たり判定
-			if (CheckSquareSquare(body->pos.x, body->pos.y, body->width, body->height,
-				block->pos.x, block->pos.y, block->width, block->height))
+			if (CheckSquareSquare(
+				body->pos.x,
+				body->pos.y,
+				body->width,
+				body->height,
+				block->pos.x,
+				block->pos.y,
+				block->width,
+				block->height))
 			{
 				// 上からあたったか
 				if (body->move.y > 0.0f)
 				{
 					// 上に押し出す
-					body->pos.y -= (body->pos.y + body->height) - block->pos.y;
+					body->pos.y -=
+						(body->pos.y + body->height) - block->pos.y;
 
 					// 空中フラグを折る
 					body->isAir = false;
 				}
+
 				// 下からあたったか
 				else if (body->move.y < 0.0f)
 				{
 					// 下に押し出す
-					body->pos.y += (block->pos.y + block->height) - body->pos.y;
-
+					body->pos.y +=
+						(block->pos.y + block->height) - body->pos.y;
 				}
 
 				// 移動量は0にする
 				body->move.y = 0.0f;
 			}
-
 		}
 	}
 }

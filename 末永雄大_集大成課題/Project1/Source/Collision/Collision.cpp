@@ -4,6 +4,8 @@
 #include "../Map/Block.h"
 #include "../Map/MapManager.h"
 #include <math.h>
+#include "../Enemy/Enemyparameter.h"
+#include "../Enemy/Nyanone.h"
 
 // 矩形と点の当たり判定
 // 引数
@@ -116,4 +118,48 @@ bool CheckCircleCircle(float circleA_PosX, float circleA_PosY, float circleA_Rad
 	}
 
 	return false;
+}
+
+void CheckPlayerone()
+{
+	PlayerData* player = GetPlayer();
+	EnemyNyanoneData* one = GetNyanone();
+
+	// プレイヤーが生存中かつ無敵状態ではない時だけ判定
+	if (player->active && !player->inviibie)
+	{
+		// プレイヤーの中心座標
+		float playerCenterX = player->body.pos.x + PLAYER_WIDTH / 2.0f;
+		float playerCenterY = player->body.pos.y + PLAYER_HEIGHT / 2.0f;
+
+		for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
+		{
+			// 死んでいる敵は判定しない
+			if (!one->active)
+			{
+				continue;
+			}
+
+			// 敵の中心座標
+			float oneCenterX = one->pos.x + ENEMY_NYANONE_WIDTH / 2.0f;
+			float oneCenterY = one->pos.y + ENEMY_NYANONE_HEIGHT / 2.0f;
+
+			// プレイヤーと敵の当たり判定
+			if (CheckSquareSquare(playerCenterX,playerCenterY,PLAYER_WIDTH,PLAYER_HEIGHT,
+				oneCenterX,oneCenterY,ENEMY_NYANONE_WIDTH,ENEMY_NYANONE_HEIGHT))
+			{
+				PlayerHitEnemy();
+				oneHitPlayer(i);
+			}
+		}
+	}
+}
+
+
+
+
+
+
+void CheckCollison()
+{
 }

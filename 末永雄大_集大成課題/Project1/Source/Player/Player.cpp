@@ -12,18 +12,22 @@
 
 //ジャンプ力
 #define PLAYER_JUMP_POWER (12.0f)
+
 //重力
 #define PLAYER_GRAVITY (0.4f)
 
 PlayerData g_PlayerData = { 0 };
-PlayerData g_PrevPlayerData = { 0 };
 
 void InitPlayer()
 {
 	g_PlayerData.body.pos.x = PLAYER_DEFAULT_POS_X;
 	g_PlayerData.body.pos.y = PLAYER_DEFAULT_POS_Y;
+
 	g_PlayerData.body.move.x = 0.0f;
 	g_PlayerData.body.move.y = 0.0f;
+
+	g_PlayerData.body.width = PLAYER_WIDTH;
+	g_PlayerData.body.height = PLAYER_HEIGHT;
 }
 
 void LoadPlayer()
@@ -61,6 +65,7 @@ void StepPlayer()
 		g_PlayerData.body.move.x = -PLAYER_MOVE_SPEED;
 	}
 
+	//ジャンプ
 	if (IsTriggerKey(KEY_UP))
 	{
 		g_PlayerData.body.move.y = -PLAYER_JUMP_POWER;
@@ -69,14 +74,11 @@ void StepPlayer()
 
 void UpdatePlayer()
 {
-	//死んで処理しない
+	//死んでたら処理しない
 	if (!g_PlayerData.active) return;
 
 	// 当たり判定付きで移動
 	MoveWithMapCollision(&g_PlayerData.body);
-
-	g_PlayerData.body.pos.x += g_PlayerData.body.move.x;
-	g_PlayerData.body.pos.y += g_PlayerData.body.move.y;
 }
 
 void DrawPlayer()
@@ -84,9 +86,12 @@ void DrawPlayer()
 	//死んでたら処理しない
 	if (!g_PlayerData.active) return;
 
+	//カメラ取得
+	CameraData camera = GetCamera();
+
 	DrawGraph(
-		(int)g_PlayerData.body.pos.x,
-		(int)g_PlayerData.body.pos.y,
+		(int)(g_PlayerData.body.pos.x - camera.pos.x),
+		(int)(g_PlayerData.body.pos.y - camera.pos.y),
 		g_PlayerData.handle,
 		TRUE
 	);
@@ -97,7 +102,27 @@ void FinPlayer()
 	DeleteGraph(g_PlayerData.handle);
 }
 
-PlayerData GetPlayer()
+PlayerData* GetPlayer()
 {
-	return g_PlayerData;
+	return &g_PlayerData;
+}
+
+void PlayerDead()
+{
+	//プレイヤーを死亡状態にする
+	g_PlayerData.active = false;
+
+	//移動停止
+	g_PlayerData.body.move.x = 0.0f;
+	g_PlayerData.body.move.y = 0.0f;
+}
+
+void PlayerHitEnemy()
+{
+	PlayerDead();
+}
+
+void PlayerHitEnemyBullet()
+{
+	PlayerDead();
 }

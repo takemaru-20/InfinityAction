@@ -4,6 +4,7 @@
 #include "Input/Input.h"
 #include "Camera/Camera.h"
 #include "Enemy/Enemy.h"
+#include "Collision/Collision.h"
 
 //プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -23,7 +24,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 
 	StartPlayer();
 	StarEnemy();
-	
+	StartMap();
+
 	//描画先を裏画面にする
 	SetDrawScreen (DX_SCREEN_BACK);
 
@@ -33,7 +35,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 		//画面をクリア
 		ClearDrawScreen();
 
-		StartMap();
+		CheckPlayerone();
+		
 		StepPlayer();
 		StepCamera();
 		StarEnemy();

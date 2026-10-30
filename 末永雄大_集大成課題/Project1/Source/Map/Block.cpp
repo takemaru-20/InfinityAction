@@ -61,6 +61,10 @@ BlockData* CreateBlock(MapChipType type, VECTOR pos)
 			block->handle = g_BlockHandle[type];
 			block->pos = pos;
 			block->type = type;
+
+			//サイズ固定
+			block->width = MAP_CHIP_WIDTH;
+			block->height = MAP_CHIP_HEIGHT;
 			return block;
 		}
 	}

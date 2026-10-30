@@ -11,3 +11,8 @@ bool CheckCirclePoint(float circlePosX, float circlePosY, float circleRadius, fl
 
 // 円と円の当たり判定
 bool CheckCircleCircle(float circleA_PosX, float circleA_PosY, float circleA_Radius, float circleB_PosX, float circleB_PosY, float circleB_Radius);
+
+//各当たり判定
+void CheckCollison();
+
+void CheckPlayerone();

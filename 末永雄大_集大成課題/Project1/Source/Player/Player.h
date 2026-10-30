@@ -3,17 +3,18 @@
 #include "../Collision/CollisionParameter.h"
 
 //プレイヤーサイズ
-#define PLAYER_WIDTH	(72.0f)
-#define PLAYER_HEIGHT	(72.0f)
+#define PLAYER_WIDTH	(40.0f)
+#define PLAYER_HEIGHT	(29.0f)
 #define PLAYER_RADIUS	(36.0f)
 
 //プレイヤーデータ
 struct PlayerData
 {
 	int handle;		//画像
+	int life;
 	bool active;	//生存フラグ
 	Body body;		// 当たり判定ボディ
-
+	bool inviibie;
 };
 
 //関数のプロトタイプ宣言
@@ -26,8 +27,10 @@ void DrawPlayer();
 void FinPlayer();
 
 //取得関数
-PlayerData GetPlayer();
+PlayerData* GetPlayer();
 
-//当たり判定
-void PlayerHitNormalBlockX(MapChipData mapChipData);
-void PlayerHitNormalBlockY(MapChipData mapChipData);
+//プレイヤー死亡処理
+void PlayerDead();
+
+void PlayerHitEnemy();
+void PlayerHitEnemyBullet();
