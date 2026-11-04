@@ -3,8 +3,9 @@
 #include "Enemyparameter.h"
 #include "../GameSetting/GameSetting.h"
 #include "../Camera/Camera.h"
+#include "../Animation/Animation.h"
 
-#define NYANONE_MOVE_SPEED (1.0f)
+#define NYANONE_MOVE_SPEED (0.5f)
 #define NYANONE_BREAK_X	(1.5f)
 #define NYANONE_BREAK_Y	(0.30f)
 
@@ -34,7 +35,7 @@ void InitNyanone()
 
 void LoadNyanone()
 {
-	g_NyanoneHandle = LoadGraph("Data/Enemy/Nyanone.png");
+	g_NyanoneHandle = LoadGraph("Data/Effect/onewaik.png");
 
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++)
 	{
@@ -102,35 +103,53 @@ void UpdateNyanone()
 {
 	EnemyNyanoneData* one = g_NyanoneData;
 
-	for (int i = 0;
-		i < ENEMY_NYANONE_MAX;
-		i++, one++)
+	for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
 	{
 		if (!one->active)
 		{
 			continue;
 		}
 
-		one->pos.x +=
-			one->move.x;
-
-		one->pos.y +=
-			one->move.y;
+		one->pos.x +=one->move.x;
 	}
 }
 
 void DrawNyanone()
 {
-	//カメラ取得
 	CameraData camera = GetCamera();
 
 	EnemyNyanoneData* one = g_NyanoneData;
 
+	// 歩行アニメーションの設定
+	const int frameNum = 4;       // コマ数
+	const float frameWidth = 37.5;    // 1コマの横幅
+	const float frameHeight = 37.5;   // 1コマの縦幅
+	const int interval = 8;       // 切り替え間隔
+
+	// アニメーション用タイマー
+	static int animTimer = 0;
+
+	animTimer++;
+
+	// 現在表示するコマ
+	int animFrame = (animTimer / interval) % frameNum;
+
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
 	{
-		if (!one->active) continue;
+		if (!one->active)
+		{
+			continue;
+		}
 
-		DrawGraph((int)(one->pos.x - camera.pos.x),(int)(one->pos.y - camera.pos.y),g_NyanoneHandle,TRUE);
+		// 切り取る画像のX座標
+		int srcX = animFrame * frameWidth;
+
+		// 歩行アニメーション描画
+		DrawRectGraph(
+			(int)(one->pos.x - camera.pos.x),
+			(int)(one->pos.y - camera.pos.y),
+			srcX, 0, frameWidth, frameHeight, one->handle, TRUE
+		);
 	}
 }
 
@@ -139,12 +158,28 @@ void FinNyanone()
 	DeleteGraph(g_NyanoneHandle);
 }
 
-void oneHitPlayer(int index)
+void OneHitPlayer(int index)
 {
-	g_NyanoneData[index].active = false;
+	EnemyNyanoneData* one = &g_NyanoneData[index];
+
+	if (!one->active) return;
+
+	// 倒されたときのアニメーション
+	PlayAnimationEffect(ENEMY_ONE_DEBT,one->pos.x,one->pos.y,5);
+
+	// 敵を消す
+	one->active = false;
 }
 
-void oneHitPlayerBullet(int index)
+void OneHitPlayerBullet(int index)
 {
-	g_NyanoneData[index].active = false;
+	EnemyNyanoneData* one = &g_NyanoneData[index];
+
+	if (!one->active) return;
+
+	// 倒されたときのアニメーション
+	PlayAnimationEffect(ENEMY_ONE_DEBT, one->pos.x, one->pos.y, 5);
+
+	// 敵を消す
+	one->active = false;
 }

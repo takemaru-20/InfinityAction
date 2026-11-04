@@ -16,5 +16,5 @@ void SpawnNyanone(float x, float y);
 EnemyNyanoneData* GetNyanone();
 
 //当たり判定
-void oneHitPlayer(int index);
-void oneHitPlayerBullet(int index);
+void OneHitPlayer(int index);
+void OneHitPlayerBullet(int index);

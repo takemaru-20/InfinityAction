@@ -31,6 +31,9 @@
     <Filter Include="Source\Eneny">
       <UniqueIdentifier>{d29e8bfd-f2f3-42a9-a945-24b5a6759fce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Animation">
+      <UniqueIdentifier>{6b74b1cc-c13b-4b10-9b0a-81cdd0bfb03b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -67,6 +70,12 @@
       <Filter>Source\Eneny</Filter>
     </ClCompile>
     <ClCompile Include="Source\Enemy\Enemy.cpp">
+      <Filter>Source\Eneny</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Animation\Animation.cpp">
+      <Filter>Source\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy\NyantwoJump.cpp">
       <Filter>Source\Eneny</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,6 +123,15 @@
       <Filter>Source\Eneny</Filter>
     </ClInclude>
     <ClInclude Include="Source\Enemy\Enemyparameter.h">
+      <Filter>Source\Eneny</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animation\Animation.h">
+      <Filter>Source\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animation\AnimationParameter.h">
+      <Filter>Source\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy\NyantwoJump.h">
       <Filter>Source\Eneny</Filter>
     </ClInclude>
   </ItemGroup>

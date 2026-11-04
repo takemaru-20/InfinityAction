@@ -125,36 +125,46 @@ void CheckPlayerone()
 	PlayerData* player = GetPlayer();
 	EnemyNyanoneData* one = GetNyanone();
 
-	// プレイヤーが生存中かつ無敵状態ではない時だけ判定
+	// プレイヤーが生きているとき
 	if (player->active && !player->inviibie)
 	{
-		// プレイヤーの中心座標
-		float playerCenterX = player->body.pos.x + PLAYER_WIDTH / 2.0f;
-		float playerCenterY = player->body.pos.y + PLAYER_HEIGHT / 2.0f;
-
 		for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
 		{
-			// 死んでいる敵は判定しない
+			// 敵が死んでいたら判定しない
 			if (!one->active)
 			{
 				continue;
 			}
 
-			// 敵の中心座標
-			float oneCenterX = one->pos.x + ENEMY_NYANONE_WIDTH / 2.0f;
-			float oneCenterY = one->pos.y + ENEMY_NYANONE_HEIGHT / 2.0f;
-
 			// プレイヤーと敵の当たり判定
-			if (CheckSquareSquare(playerCenterX,playerCenterY,PLAYER_WIDTH,PLAYER_HEIGHT,
-				oneCenterX,oneCenterY,ENEMY_NYANONE_WIDTH,ENEMY_NYANONE_HEIGHT))
+			if (CheckSquareSquare(player->body.pos.x,player->body.pos.y,PLAYER_WIDTH,PLAYER_HEIGHT,
+				one->pos.x,one->pos.y,ENEMY_NYANONE_WIDTH,ENEMY_NYANONE_HEIGHT))
 			{
-				PlayerHitEnemy();
-				oneHitPlayer(i);
+				// プレイヤーの足元
+				float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+
+				// 敵の上側
+				float enemyTop = one->pos.y;
+
+				// プレイヤーが落下中で、敵の上側にいる
+				if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
+				{
+					// 敵を倒す
+					OneHitPlayer(i);
+
+					// 踏んだら少しジャンプ
+					player->body.move.y = -8;
+				}
+				else
+				{
+					// 横から当たったらプレイヤー死亡
+					PlayerHitEnemy();
+					return;
+				}
 			}
 		}
 	}
 }
-
 
 
 
