@@ -6,6 +6,7 @@
 #include <math.h>
 #include "../Enemy/Enemyparameter.h"
 #include "../Enemy/Nyanone.h"
+#include "../Enemy/NyantwoJump.h"
 
 // 矩形と点の当たり判定
 // 引数
@@ -166,10 +167,57 @@ void CheckPlayerone()
 	}
 }
 
+void CheckPlayertwo()
+{
+	PlayerData* player = GetPlayer();
+	EnemyNyantwoData* two = GetNyantwo();
+
+	// プレイヤーが生きているとき
+	if (player->active && !player->inviibie)
+	{
+		for (int i = 0; i < ENEMY_NYANTWO_MAX; i++, two++)
+		{
+			// 敵が死んでいたら判定しない
+			if (!two->active)
+			{
+				continue;
+			}
+
+			// プレイヤーと敵の当たり判定
+			if (CheckSquareSquare(player->body.pos.x, player->body.pos.y, PLAYER_WIDTH, PLAYER_HEIGHT,
+				two->pos.x, two->pos.y, ENEMY_NYANTWO_WIDTH, ENEMY_NYANTWO_HEIGHT))
+			{
+				// プレイヤーの足元
+				float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+
+				// 敵の上側
+				float enemyTop = two->pos.y;
+
+				// プレイヤーが落下中で、敵の上側にいる
+				if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
+				{
+					// 敵を倒す
+					TwoHitPlayer(i);
+
+					// 踏んだら少しジャンプ
+					player->body.move.y = -8;
+				}
+				else
+				{
+					// 横から当たったらプレイヤー死亡
+					PlayerHitEnemy();
+					return;
+				}
+			}
+		}
+	}
+}
 
 
 
 
 void CheckCollison()
 {
+	CheckPlayerone();
+	CheckPlayertwo();
 }

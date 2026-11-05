@@ -16,3 +16,4 @@ bool CheckCircleCircle(float circleA_PosX, float circleA_PosY, float circleA_Rad
 void CheckCollison();
 
 void CheckPlayerone();
+void CheckPlayertwo();

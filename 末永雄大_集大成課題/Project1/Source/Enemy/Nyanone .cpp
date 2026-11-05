@@ -6,8 +6,6 @@
 #include "../Animation/Animation.h"
 
 #define NYANONE_MOVE_SPEED (0.5f)
-#define NYANONE_BREAK_X	(1.5f)
-#define NYANONE_BREAK_Y	(0.30f)
 
 // 変数
 EnemyNyanoneData g_NyanoneData[ENEMY_NYANONE_MAX] = { 0 };
@@ -46,41 +44,6 @@ void LoadNyanone()
 void StarNyanone()
 {
 }
-
-void SpawnNyanone(float x, float y)
-{
-	for (int i = 0; i < ENEMY_NYANONE_MAX; i++)
-	{
-		EnemyNyanoneData* one = &g_NyanoneData[i];
-
-		// 既に使われている
-		if (one->active)
-		{
-			continue;
-		}
-
-		one->active = true;
-
-		one->pos.x = x;
-		one->pos.y = y;
-		one->pos.z = 0.0f;
-
-		one->move.x = 0.0f;
-		one->move.y = 0.0f;
-		one->move.z = 0.0f;
-
-		one->handle = g_NyanoneHandle;
-
-		return;
-	}
-}
-
-EnemyNyanoneData* GetNyanone()
-{
-	return g_NyanoneData;
-}
-
-
 
 void StepNyanone()
 {
@@ -145,11 +108,8 @@ void DrawNyanone()
 		int srcX = animFrame * frameWidth;
 
 		// 歩行アニメーション描画
-		DrawRectGraph(
-			(int)(one->pos.x - camera.pos.x),
-			(int)(one->pos.y - camera.pos.y),
-			srcX, 0, frameWidth, frameHeight, one->handle, TRUE
-		);
+		DrawRectGraph((int)(one->pos.x - camera.pos.x),(int)(one->pos.y - camera.pos.y),
+			srcX, 0, frameWidth, frameHeight, one->handle, TRUE);
 	}
 }
 
@@ -158,6 +118,38 @@ void FinNyanone()
 	DeleteGraph(g_NyanoneHandle);
 }
 
+void SpawnNyanone(float x, float y)
+{
+	for (int i = 0; i < ENEMY_NYANONE_MAX; i++)
+	{
+		EnemyNyanoneData* one = &g_NyanoneData[i];
+
+		// 既に使われている
+		if (one->active)
+		{
+			continue;
+		}
+
+		one->active = true;
+
+		one->pos.x = x;
+		one->pos.y = y -5.0f;
+		one->pos.z = 0.0f;
+
+		one->move.x = 0.0f;
+		one->move.y = 0.0f;
+		one->move.z = 0.0f;
+
+		one->handle = g_NyanoneHandle;
+
+		return;
+	}
+}
+
+EnemyNyanoneData* GetNyanone()
+{
+	return g_NyanoneData;
+}
 void OneHitPlayer(int index)
 {
 	EnemyNyanoneData* one = &g_NyanoneData[index];

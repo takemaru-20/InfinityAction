@@ -31,10 +31,10 @@ struct EnemyNyanoneData
 
 //Nyantwo////////
 
-#define ENEMY_NYANTOW_MAX			(255)    //最大出現数
-#define ENEMY_NYANTOW_RADIUS		(20.0f)	 //半径	 
-#define ENEMY_NYANTOW_WIDTH			(36.0f)	 //横幅
-#define ENEMY_NYANTOW_HEIGHT		(36.0f)  //縦幅
+#define ENEMY_NYANTWO_MAX			(255)    //最大出現数
+#define ENEMY_NYANTWO_RADIUS		(20.0f)	 //半径	 
+#define ENEMY_NYANTWO_WIDTH			(36.0f)	 //横幅
+#define ENEMY_NYANTWO_HEIGHT		(36.0f)  //縦幅
 
 struct EnemyNyantwoData
 {

@@ -28,10 +28,12 @@ void InitAnimationEffect()
 
 void LoadAnimationEffect()
 {
-	g_AnimationEffectHandle[ENEMY_ONE_WAIK] = LoadGraph("Data/Effect/onewaik.png");
-	g_AnimationEffectHandle[ENEMY_ONE_DEBT] = LoadGraph("Data/Effect/onedebt.png");
-}
+	g_AnimationEffectHandle[ENEMY_ONE_DEBT] =
+		LoadGraph("Data/Effect/onedebt.png");
 
+	g_AnimationEffectHandle[ENEMY_TWO_DEBT] =
+		LoadGraph("Data/Effect/Nyantwodebt.png");
+}
 void StepAnimationEffect()
 {
 	AnimationData* effect = g_AnimationData;

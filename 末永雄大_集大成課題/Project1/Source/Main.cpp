@@ -38,7 +38,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 		//画面をクリア
 		ClearDrawScreen();
 
-		CheckPlayerone();
+		CheckCollison();
 		
 		StepPlayer();
 		StepCamera();
