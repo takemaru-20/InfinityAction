@@ -23,12 +23,20 @@ void InitNyantwo()
 		two->active = false;
 
 		two->pos = VGet(0.0f, 0.0f, 0.0f);
-
 		two->move = VGet(0.0f, 0.0f, 0.0f);
-
+		two->JumpTimer = 3;
 		two->handle = 0;
 		two->isMoveChange = false;
 		two->param = nullptr;
+
+		two->frameNum = 9;
+		two->frameWidth = 48;
+		two->frameHeight = 48;
+		two->interval = 8;
+		two->animTimer = 0;
+
+		two->Jumpdistance = 3;
+		two->JumpTimer = 0;
 	}
 }
 
@@ -75,6 +83,11 @@ void UpdateNyantwo()
 		}
 
 		two->pos.x += two->move.x;
+
+		if (two->JumpTimer <= 3)
+		{
+
+		}
 	}
 }
 
@@ -84,19 +97,10 @@ void DrawNyantwo()
 
 	EnemyNyantwoData* two = g_NyantwoData;
 
-	// 歩行アニメーションの設定
-	const int frameNum = 9;       // コマ数
-	const float frameWidth = 48;    // 1コマの横幅
-	const float frameHeight = 48;   // 1コマの縦幅
-	const int interval = 8;       // 切り替え間隔
-
-	// アニメーション用タイマー
-	static int animTimer = 0;
-
-	animTimer++;
+	two->animTimer++;
 
 	// 現在表示するコマ
-	int animFrame = (animTimer / interval) % frameNum;
+	int animFrame = (two->animTimer / two->interval) % two->frameNum;
 
 	for (int i = 0; i < ENEMY_NYANTWO_MAX; i++, two++)
 	{
@@ -106,11 +110,11 @@ void DrawNyantwo()
 		}
 
 		// 切り取る画像のX座標
-		int srcX = animFrame * frameWidth;
+		int srcX = animFrame * two->frameWidth;
 
 		// 歩行アニメーション描画
 		DrawRectGraph((int)(two->pos.x - camera.pos.x),(int)(two->pos.y - camera.pos.y),
-			srcX, 0, frameWidth, frameHeight, two->handle, TRUE);
+			srcX, 0, two->frameWidth, two->frameHeight, two->handle, TRUE);
 	}
 }
 

@@ -40,9 +40,19 @@ struct EnemyNyantwoData
 {
 	int handle;
 	int NYANONETimer;
+	
 	VECTOR pos;
 	VECTOR move;
 	bool active;
 	bool isMoveChange;
 	const EnemyParameter* param;
+
+	int JumpTimer;
+	int Jumpdistance;
+
+	int frameNum;
+	float frameWidth;
+	float frameHeight;
+	int interval;
+	int animTimer;
 };
