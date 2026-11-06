@@ -35,8 +35,10 @@ void InitNyantwo()
 		two->interval = 8;
 		two->animTimer = 0;
 
-		two->Jumpdistance = 3;
+		two->Jumpdistance = 0;
 		two->JumpTimer = 0;
+		two->JumpSpeed = 0;
+		two->GroundY = 0;
 	}
 }
 
@@ -71,6 +73,7 @@ void StepNyantwo()
 	}
 }
 
+
 void UpdateNyantwo()
 {
 	EnemyNyantwoData* two = g_NyantwoData;
@@ -82,14 +85,38 @@ void UpdateNyantwo()
 			continue;
 		}
 
+		// 左に移動
 		two->pos.x += two->move.x;
 
-		if (two->JumpTimer <= 3)
-		{
+		// ジャンプまでの時間
+		two->JumpTimer++;
 
+		// 240フレームごとにジャンプ
+		if (two->JumpTimer >= 240)
+		{
+			// 地面にいる場合だけジャンプ
+			if (two->pos.y >= two->GroundY)
+			{
+				two->JumpSpeed = -5.0f;
+				two->JumpTimer = 0;
+			}
+		}
+
+		// 重力
+		two->JumpSpeed += 0.1f;
+
+		// 上下移動
+		two->pos.y += two->JumpSpeed;
+
+		// 地面に着地
+		if (two->pos.y >= two->GroundY)
+		{
+			two->pos.y = two->GroundY;
+			two->JumpSpeed = 0.0f;
 		}
 	}
 }
+
 
 void DrawNyantwo()
 {
@@ -140,6 +167,10 @@ void SpawnNyantwo(float x, float y)
 		two->pos.x = x;
 		two->pos.y = y -15.0f;
 		two->pos.z = 0.0f;
+
+		two->GroundY = two->pos.y;
+		two->JumpSpeed = 0;
+		two->JumpTimer = 0;
 
 		two->move.x = 0.0f;
 		two->move.y = 0.0f;

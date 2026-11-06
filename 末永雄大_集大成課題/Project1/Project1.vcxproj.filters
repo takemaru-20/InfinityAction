@@ -78,6 +78,9 @@
     <ClCompile Include="Source\Enemy\NyantwoJump.cpp">
       <Filter>Source\Eneny</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Enemy\Canthrowing.cpp">
+      <Filter>Source\Eneny</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Map\MapChip.h">
@@ -132,6 +135,9 @@
       <Filter>Source\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Source\Enemy\NyantwoJump.h">
+      <Filter>Source\Eneny</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy\Canthrowing.h">
       <Filter>Source\Eneny</Filter>
     </ClInclude>
   </ItemGroup>

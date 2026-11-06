@@ -5,6 +5,7 @@
 #include "Block.h"
 #include "../Enemy/Nyanone.h"
 #include "../Enemy/NyantwoJump.h"
+#include "../Enemy/Canthrowing.h"
 
 MapChipData g_MapChip[MAP_CHIP_Y_NUM][MAP_CHIP_X_NUM] = { 0 };
 
@@ -53,6 +54,13 @@ void CreateMap()
 			if (type == NYANTWO_SPAWN)
 			{
 				SpawnNyantwo(pos.x, pos.y);
+				continue;
+			}
+
+			// Can配置
+			if (type == CAN_SPAWN)
+			{
+				SpawnCan(pos.x, pos.y);
 				continue;
 			}
 

@@ -20,14 +20,17 @@ void InitNyanone()
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
 	{
 		one->active = false;
-
 		one->pos = VGet(0.0f,0.0f,0.0f);
-
 		one->move = VGet(0.0f,0.0f,0.0f);
-
 		one->handle = 0;
 		one->isMoveChange = false;
 		one->param = nullptr;
+
+		one->frameNum = 8;
+		one->frameWidth = 37;
+		one->frameHeight = 37;
+		one->interval = 8;
+		one->animTimer = 0;
 	}
 }
 
@@ -83,19 +86,10 @@ void DrawNyanone()
 
 	EnemyNyanoneData* one = g_NyanoneData;
 
-	// 歩行アニメーションの設定
-	const int frameNum = 4;       // コマ数
-	const float frameWidth = 37.5;    // 1コマの横幅
-	const float frameHeight = 37.5;   // 1コマの縦幅
-	const int interval = 8;       // 切り替え間隔
-
-	// アニメーション用タイマー
-	static int animTimer = 0;
-
-	animTimer++;
+	one->animTimer++;
 
 	// 現在表示するコマ
-	int animFrame = (animTimer / interval) % frameNum;
+	int animFrame = (one->animTimer / one->interval) % one->frameNum;
 
 	for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
 	{
@@ -105,11 +99,11 @@ void DrawNyanone()
 		}
 
 		// 切り取る画像のX座標
-		int srcX = animFrame * frameWidth;
+		int srcX = animFrame * one->frameWidth;
 
 		// 歩行アニメーション描画
 		DrawRectGraph((int)(one->pos.x - camera.pos.x),(int)(one->pos.y - camera.pos.y),
-			srcX, 0, frameWidth, frameHeight, one->handle, TRUE);
+			srcX, 0, one->frameWidth, one->frameHeight, one->handle, TRUE);
 	}
 }
 
