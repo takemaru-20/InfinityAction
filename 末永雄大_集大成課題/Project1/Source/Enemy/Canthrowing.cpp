@@ -24,9 +24,9 @@ void InitCan()
 		can->isMoveChange = false;
 		can->param = nullptr;
 
-		can->frameNum = 8;
-		can->frameWidth = 37;
-		can->frameHeight = 37;
+		can->frameNum = 12;
+		can->frameWidth = 36;
+		can->frameHeight = 45;
 		can->interval = 8;
 		can->animTimer = 0;
 	}
@@ -34,7 +34,7 @@ void InitCan()
 
 void LoadCan()
 {
-	g_CanHandle = LoadGraph("Data/Effect/onewaik.png");
+	g_CanHandle = LoadGraph("Data/Effect/Canthrowing.png");
 
 	for (int i = 0; i < ENEMY_CAN_MAX; i++)
 	{
@@ -120,7 +120,7 @@ void SpawnCan(float x, float y)
 		can->active = true;
 
 		can->pos.x = x;
-		can->pos.y = y - 5.0f;
+		can->pos.y = y - 15.0f;
 		can->pos.z = 0.0f;
 
 		can->move.x = 0.0f;
@@ -144,7 +144,7 @@ void CanHitPlayer(int index)
 	if (!can->active) return;
 
 	// 倒されたときのアニメーション
-	PlayAnimationEffect(ENEMY_ONE_DEBT, can->pos.x, can->pos.y, 5);
+	PlayAnimationEffect(ENEMY_CAN_DEBT, can->pos.x, can->pos.y, 5);
 
 	// 敵を消す
 	can->active = false;
@@ -157,7 +157,7 @@ void CanHitPlayerBullet(int index)
 	if (!can->active) return;
 
 	// 倒されたときのアニメーション
-	PlayAnimationEffect(ENEMY_ONE_DEBT, can->pos.x, can->pos.y, 5);
+	PlayAnimationEffect(ENEMY_CAN_DEBT, can->pos.x, can->pos.y, 5);
 
 	// 敵を消す
 	can->active = false;

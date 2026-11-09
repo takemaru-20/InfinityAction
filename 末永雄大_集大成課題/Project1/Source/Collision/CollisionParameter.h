@@ -8,4 +8,7 @@ struct Body
 	VECTOR move;
 	float width;
 	float height;
+	float radius;
+	float hitBlock;
+	float reflactPower;
 };

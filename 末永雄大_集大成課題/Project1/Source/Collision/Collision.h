@@ -17,3 +17,4 @@ void CheckCollison();
 
 void CheckPlayerone();
 void CheckPlayertwo();
+void CheckPlayerCan();

@@ -7,6 +7,7 @@
 #include "../Enemy/Enemyparameter.h"
 #include "../Enemy/Nyanone.h"
 #include "../Enemy/NyantwoJump.h"
+#include "../Enemy/Canthrowing.h"
 
 // 矩形と点の当たり判定
 // 引数
@@ -213,6 +214,52 @@ void CheckPlayertwo()
 	}
 }
 
+void CheckPlayerCan()
+{
+	PlayerData* player = GetPlayer();
+	EnemyCanData* can = GetCan();
+
+	// プレイヤーが生きているとき
+	if (player->active && !player->inviibie)
+	{
+		for (int i = 0; i < ENEMY_CAN_MAX; i++, can++)
+		{
+			// 敵が死んでいたら判定しない
+			if (!can->active)
+			{
+				continue;
+			}
+
+			// プレイヤーと敵の当たり判定
+			if (CheckSquareSquare(player->body.pos.x, player->body.pos.y, PLAYER_WIDTH, PLAYER_HEIGHT,
+				can->pos.x, can->pos.y, ENEMY_CAN_WIDTH, ENEMY_CAN_HEIGHT))
+			{
+				// プレイヤーの足元
+				float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+
+				// 敵の上側
+				float enemyTop = can->pos.y;
+
+				// プレイヤーが落下中で、敵の上側にいる
+				if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
+				{
+					// 敵を倒す
+					CanHitPlayer(i);
+
+					// 踏んだら少しジャンプ
+					player->body.move.y = -8;
+				}
+				else
+				{
+					// 横から当たったらプレイヤー死亡
+					PlayerHitEnemy();
+					return;
+				}
+			}
+		}
+	}
+}
+
 
 
 
@@ -220,4 +267,5 @@ void CheckCollison()
 {
 	CheckPlayerone();
 	CheckPlayertwo();
+	CheckPlayerCan();
 }

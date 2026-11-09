@@ -1,0 +1,6 @@
+void Init();
+void Load();
+void Step();
+void Update();
+void Draw();
+void Fin();
