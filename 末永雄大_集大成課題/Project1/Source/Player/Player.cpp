@@ -11,7 +11,7 @@
 #define PLAYER_MOVE_SPEED (1.0f)
 
 //ジャンプ力
-#define PLAYER_JUMP_POWER (12.0f)
+#define PLAYER_JUMP_POWER (9.0f)
 
 //重力
 #define PLAYER_GRAVITY (0.4f)
