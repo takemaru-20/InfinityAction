@@ -3,7 +3,7 @@
 #include "../Collision/CollisionParameter.h"
 
 //プレイヤーサイズ
-#define PLAYER_WIDTH	(40.0f)
+#define PLAYER_WIDTH	(29.0f)
 #define PLAYER_HEIGHT	(29.0f)
 #define PLAYER_RADIUS	(36.0f)
 

@@ -4,8 +4,11 @@
 #include "../GameSetting/GameSetting.h"
 #include "../Camera/Camera.h"
 #include "../Animation/Animation.h"
+#include "../Collision/Collision.h"
+#include "../Map/MapManager.h"
 
 #define NYANONE_MOVE_SPEED (0.5f)
+#define NYANONE_GRAVITY (0.4f)
 
 // 変数
 EnemyNyanoneData g_NyanoneData[ENEMY_NYANONE_MAX] = { 0 };
@@ -24,6 +27,7 @@ void InitNyanone()
 		one->move = VGet(0.0f,0.0f,0.0f);
 		one->handle = 0;
 		one->isMoveChange = false;
+		one->isRight = false;
 		one->param = nullptr;
 
 		one->frameNum = 8;
@@ -60,8 +64,20 @@ void StepNyanone()
 			continue;
 		}
 
-		// 左に移動
-		one->move.x = -NYANONE_MOVE_SPEED;
+		// 移動方向
+		if (one->isRight)
+		{
+			// 左に移動
+			one->move.x = -NYANONE_MOVE_SPEED;
+		}
+		else
+		{
+			// 右に移動
+			one->move.x = NYANONE_MOVE_SPEED;
+		}
+
+		// 重力
+		one->move.y += NYANONE_GRAVITY;
 	}
 }
 
@@ -76,7 +92,26 @@ void UpdateNyanone()
 			continue;
 		}
 
-		one->pos.x +=one->move.x;
+		// 当たり判定用のデータ
+		Body body = {};
+
+		body.pos = one->pos;
+		body.move = one->move;
+		body.width = ENEMY_NYANONE_WIDTH;
+		body.height = ENEMY_NYANONE_HEIGHT;
+
+		// ブロックとの当たり判定
+		MoveWithMapCollision(&body);
+
+		// 壁に当たったら方向転換
+		if (one->move.x != 0.0f && body.move.x == 0.0f)
+		{
+			one->isRight = !one->isRight;
+		}
+
+		// 当たり判定後の座標を戻す
+		one->pos = body.pos;
+		one->move = body.move;
 	}
 }
 
@@ -102,8 +137,8 @@ void DrawNyanone()
 		int srcX = animFrame * one->frameWidth;
 
 		// 歩行アニメーション描画
-		DrawRectGraph((int)(one->pos.x - camera.pos.x),(int)(one->pos.y - camera.pos.y),
-			srcX, 0, one->frameWidth, one->frameHeight, one->handle, TRUE);
+		DrawRectGraph((int)(one->pos.x - camera.pos.x),(int)(one->pos.y - camera.pos.y + 11),
+			srcX, 0, one->frameWidth, one->frameHeight, one->handle, TRUE, !one->isRight);
 	}
 }
 
@@ -125,9 +160,10 @@ void SpawnNyanone(float x, float y)
 		}
 
 		one->active = true;
+		one->isRight = false;
 
 		one->pos.x = x;
-		one->pos.y = y -5.0f;
+		one->pos.y = y;
 		one->pos.z = 0.0f;
 
 		one->move.x = 0.0f;
