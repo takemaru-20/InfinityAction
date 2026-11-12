@@ -6,6 +6,8 @@
 #include "../Animation/Animation.h"
 #include "../Collision/Collision.h"
 #include "../Map/MapManager.h"
+#include "../Map/MapChip.h"
+#include "../Map/MapParameter.h"
 
 #define NYANONE_MOVE_SPEED (0.5f)
 #define NYANONE_GRAVITY (0.4f)
@@ -81,6 +83,46 @@ void StepNyanone()
 	}
 }
 
+// 進行方向に床があるか確認
+bool CheckNyanoneFloor(float x, float y)
+{
+	for (int mapY = 0; mapY < MAP_CHIP_Y_NUM; mapY++)
+	{
+		for (int mapX = 0; mapX < MAP_CHIP_X_NUM; mapX++)
+		{
+			MapChipData chip = GetMapChipData(mapX, mapY);
+
+			// 普通のブロック以外は無視
+			if (chip.mapChip != NORMAL_BLOCK)
+			{
+				continue;
+			}
+
+			BlockData* block = chip.data;
+
+			if (block == nullptr)
+			{
+				continue;
+			}
+
+			// 指定した場所に床があるか確認
+			if (CheckSquarePoint(
+				block->pos.x,
+				block->pos.y,
+				block->width,
+				block->height,
+				x,
+				y))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+
 void UpdateNyanone()
 {
 	EnemyNyanoneData* one = g_NyanoneData;
@@ -108,12 +150,42 @@ void UpdateNyanone()
 		{
 			one->isRight = !one->isRight;
 		}
+		else
+		{
+			// 猫の進行方向の足元を調べる
+			float checkX;
+			float checkY = body.pos.y + body.height + 2.0f;
+
+			if (one->isRight)
+			{
+				// 左側を確認
+				checkX = body.pos.x - 2.0f;
+			}
+			else
+			{
+				// 右側を確認
+				checkX = body.pos.x + body.width + 2.0f;
+			}
+
+			// 地面にいるときだけ床を確認
+			if (one->move.y > 0.0f && body.move.y == 0.0f)
+			{
+				// 進行方向に床がなければ反転
+				if (!CheckNyanoneFloor(checkX, checkY))
+				{
+					one->isRight = !one->isRight;
+					body.move.x = 0.0f;
+				}
+			}
+		}
 
 		// 当たり判定後の座標を戻す
 		one->pos = body.pos;
 		one->move = body.move;
 	}
 }
+
+
 
 void DrawNyanone()
 {
@@ -205,3 +277,4 @@ void OneHitPlayerBullet(int index)
 	// 敵を消す
 	one->active = false;
 }
+
