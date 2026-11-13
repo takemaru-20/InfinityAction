@@ -90,8 +90,8 @@ void StepNyantwo()
 		// ジャンプまでの時間
 		two->JumpTimer++;
 
-		// 240フレームごとにジャンプ
-		if (two->JumpTimer >= 240)
+		// 180フレームごとにジャンプ
+		if (two->JumpTimer >= 180)
 		{
 			// 地面にいる場合だけジャンプ
 			if (two->onGround)
