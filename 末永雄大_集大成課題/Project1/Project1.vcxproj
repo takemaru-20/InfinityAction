@@ -145,6 +145,7 @@
     <ClCompile Include="Source\Enemy\Enemy.cpp" />
     <ClCompile Include="Source\Enemy\Nyanone .cpp" />
     <ClCompile Include="Source\Enemy\NyantwoJump.cpp" />
+    <ClCompile Include="Source\FPS\FPS.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Map\Block.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Source\Enemy\Enemyparameter.h" />
     <ClInclude Include="Source\Enemy\Nyanone.h" />
     <ClInclude Include="Source\Enemy\NyantwoJump.h" />
+    <ClInclude Include="Source\FPS\FPS.h" />
     <ClInclude Include="Source\GameSetting\GameSetting.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Map\Block.h" />

@@ -6,6 +6,7 @@
 #include "Enemy/Enemy.h"
 #include "Collision/Collision.h"
 #include "Animation/Animation.h"
+#include "FPS/FPS.h"
 
 //プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -19,6 +20,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 	InitCamera();
 	InitEnemy();
 	InitAnimationEffect();
+	InitFPS();
 
 	LoadMap();
 	LoadPlayer();
@@ -48,18 +50,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 		UpdatePlayer();
 		UpdateInput();
 		UpdateEnemy();
+		UpdateFPS();
 		
         DrawMap();
 		DrawPlayer();
 		DrawCamera();
 		DrawEnemy();
 		DrawAnimationEffect();
+		DrawFPS();
 
 		//エスケープキーで終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) break;
 
 		//画面フリップ
 		ScreenFlip();
+
+		FPSWait();
 	}
 
 	FinPlayer();

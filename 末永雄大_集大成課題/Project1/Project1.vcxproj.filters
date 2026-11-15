@@ -40,6 +40,9 @@
     <Filter Include="Source\MyMath">
       <UniqueIdentifier>{8e8ca888-8b3f-44fa-b237-d4fb969e3f2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\FPS">
+      <UniqueIdentifier>{164fdf90-a3a5-47ec-b74b-579f819a894e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="Source\Bullet\BulletManager.cpp">
       <Filter>Source\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FPS\FPS.cpp">
+      <Filter>Source\FPS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Source\Bullet\BulletParameter.h">
       <Filter>Source\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FPS\FPS.h">
+      <Filter>Source\FPS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
