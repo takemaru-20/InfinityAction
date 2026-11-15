@@ -1,4 +1,4 @@
-﻿#include "DxLib.h"
+﻿ #include "DxLib.h"
 #include "Player.h"
 #include "../Input/Input.h"
 #include "../Camera/Camera.h"
