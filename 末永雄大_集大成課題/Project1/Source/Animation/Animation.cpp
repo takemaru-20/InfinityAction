@@ -28,10 +28,15 @@ void InitAnimationEffect()
 
 void LoadAnimationEffect()
 {
-	g_AnimationEffectHandle[ENEMY_ONE_WAIK] = LoadGraph("Data/Effect/onewaik.png");
-	g_AnimationEffectHandle[ENEMY_ONE_DEBT] = LoadGraph("Data/Effect/onedebt.png");
-}
+	g_AnimationEffectHandle[ENEMY_ONE_DEBT] =
+		LoadGraph("Data/Effect/onedebt.png");
 
+	g_AnimationEffectHandle[ENEMY_TWO_DEBT] =
+		LoadGraph("Data/Effect/Nyantwodebt.png");
+
+	g_AnimationEffectHandle[ENEMY_CAN_DEBT] =
+		LoadGraph("Data/Effect/Canthrowingdebt.png");
+}
 void StepAnimationEffect()
 {
 	AnimationData* effect = g_AnimationData;
@@ -80,13 +85,8 @@ void DrawAnimationEffect()
 		int srcY = 0;
 
 		DrawRectGraph(
-			(int)(effect->pos.x - camera.pos.x - 22),
-			(int)(effect->pos.y - camera.pos.y - 22),
-			srcX,
-			srcY,
-			effect->frameWidth,
-			effect->frameHeight,
-			effect->handle,
+			(int)(effect->pos.x - camera.pos.x - 22),(int)(effect->pos.y - camera.pos.y - 22),srcX,srcY,
+			effect->frameWidth,effect->frameHeight,effect->handle,
 			TRUE
 		);
 	}

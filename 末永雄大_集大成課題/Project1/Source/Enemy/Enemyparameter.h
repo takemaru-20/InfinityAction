@@ -15,8 +15,8 @@ struct EnemyParameter
 
 #define ENEMY_NYANONE_MAX			(255)    //最大出現数
 #define ENEMY_NYANONE_RADIUS		(20.0f)	 //半径	 
-#define ENEMY_NYANONE_WIDTH			(36.0f)	 //横幅
-#define ENEMY_NYANONE_HEIGHT		(36.0f)  //縦幅
+#define ENEMY_NYANONE_WIDTH			(37.0f)	 //横幅
+#define ENEMY_NYANONE_HEIGHT		(37.0f)  //縦幅
 
 struct EnemyNyanoneData
 {
@@ -26,23 +26,66 @@ struct EnemyNyanoneData
 	VECTOR move;
 	bool active;
 	bool isMoveChange;
+	bool isRight;
 	const EnemyParameter* param;
+
+	int frameNum;
+	float frameWidth;
+	float frameHeight;
+	int interval;
+	int animTimer;
 };
 
 //Nyantwo////////
 
-#define ENEMY_NYANTOW_MAX			(255)    //最大出現数
-#define ENEMY_NYANTOW_RADIUS		(20.0f)	 //半径	 
-#define ENEMY_NYANTOW_WIDTH			(36.0f)	 //横幅
-#define ENEMY_NYANTOW_HEIGHT		(36.0f)  //縦幅
+#define ENEMY_NYANTWO_MAX			(255)    //最大出現数
+#define ENEMY_NYANTWO_RADIUS		(20.0f)	 //半径	 
+#define ENEMY_NYANTWO_WIDTH			(47.0f)	 //横幅
+#define ENEMY_NYANTWO_HEIGHT		(47.0f)  //縦幅
 
 struct EnemyNyantwoData
 {
 	int handle;
-	int NYANONETimer;
+	VECTOR pos;
+	VECTOR move;
+	bool active;
+	bool isMoveChange;
+	bool onGround; 
+	bool isRight;
+	const EnemyParameter* param;
+
+	int JumpTimer;       // ジャンプまでの時間
+	int Jumpdistance;    // ジャンプの強さ
+	float JumpSpeed;     // 現在のジャンプ速度
+	float GroundY;       // 地面のY座標
+
+	int frameNum;
+	float frameWidth;
+	float frameHeight;
+	int interval;
+	int animTimer;
+};
+
+
+//Can////////
+
+#define ENEMY_CAN_MAX			(255)    //最大出現数
+#define ENEMY_CAN_RADIUS		(20.0f)	 //半径	 
+#define ENEMY_CAN_WIDTH			(36.0f)	 //横幅
+#define ENEMY_CAN_HEIGHT		(36.0f)  //縦幅
+
+struct EnemyCanData
+{
+	int handle;
 	VECTOR pos;
 	VECTOR move;
 	bool active;
 	bool isMoveChange;
 	const EnemyParameter* param;
+
+	int frameNum;
+	float frameWidth;
+	float frameHeight;
+	int interval;
+	int animTimer;
 };
