@@ -92,11 +92,15 @@ bool CheckNyanoneFloor(float x, float y)
 		{
 			MapChipData chip = GetMapChipData(mapX, mapY);
 
-			// 普通のブロック以外は無視
-			if (chip.mapChip != NORMAL_BLOCK)
+
+			// 床ブロック以外は無視
+			if (chip.mapChip != NORMAL_BLOCK &&
+				chip.mapChip != SOIL_BLOCK &&
+				chip.mapChip != GRASS_BLOCK)
 			{
 				continue;
 			}
+
 
 			BlockData* block = chip.data;
 
@@ -105,14 +109,10 @@ bool CheckNyanoneFloor(float x, float y)
 				continue;
 			}
 
-			// 指定した場所に床があるか確認
-			if (CheckSquarePoint(
-				block->pos.x,
-				block->pos.y,
-				block->width,
-				block->height,
-				x,
-				y))
+			if (x >= block->pos.x &&
+				x < block->pos.x + block->width &&
+				y >= block->pos.y &&
+				y < block->pos.y + block->height)
 			{
 				return true;
 			}
@@ -134,7 +134,6 @@ void UpdateNyanone()
 			continue;
 		}
 
-		// 当たり判定用のデータ
 		Body body = {};
 
 		body.pos = one->pos;
@@ -145,43 +144,46 @@ void UpdateNyanone()
 		// ブロックとの当たり判定
 		MoveWithMapCollision(&body);
 
-		// 壁に当たったら方向転換
-		if (one->move.x != 0.0f && body.move.x == 0.0f)
+		// 壁に当たったか確認
+		bool hitWall =
+			(one->move.x != 0.0f && body.move.x == 0.0f);
+
+		// 座標を戻す
+		one->pos = body.pos;
+		one->move = body.move;
+
+		// 足元の床を確認
+		float footY = one->pos.y + body.height + 1.0f;
+		float centerX = one->pos.x + body.width / 2.0f;
+
+		// 現在の足元に床があるか
+		bool onFloor = CheckNyanoneFloor(centerX, footY);
+
+		// 進行方向の床を調べる
+		float checkX;
+
+		if (one->isRight)
 		{
-			one->isRight = !one->isRight;
+			// 左方向の床を確認
+			checkX = one->pos.x - 8.0f;
 		}
 		else
 		{
-			// 猫の進行方向の足元を調べる
-			float checkX;
-			float checkY = body.pos.y + body.height + 2.0f;
-
-			if (one->isRight)
-			{
-				// 左側を確認
-				checkX = body.pos.x - 2.0f;
-			}
-			else
-			{
-				// 右側を確認
-				checkX = body.pos.x + body.width + 2.0f;
-			}
-
-			// 地面にいるときだけ床を確認
-			if (one->move.y > 0.0f && body.move.y == 0.0f)
-			{
-				// 進行方向に床がなければ反転
-				if (!CheckNyanoneFloor(checkX, checkY))
-				{
-					one->isRight = !one->isRight;
-					body.move.x = 0.0f;
-				}
-			}
+			// 右方向の床を確認
+			checkX = one->pos.x + body.width + 8.0f;
 		}
 
-		// 当たり判定後の座標を戻す
-		one->pos = body.pos;
-		one->move = body.move;
+		// 壁に当たったら反転
+		if (hitWall)
+		{
+			one->isRight = !one->isRight;
+		}
+
+		// 地面に立っていて、進行方向に床がなければ反転
+		else if (onFloor && !CheckNyanoneFloor(checkX, footY))
+		{
+			one->isRight = !one->isRight;
+		}
 	}
 }
 
