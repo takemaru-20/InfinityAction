@@ -43,6 +43,9 @@
     <Filter Include="Source\FPS">
       <UniqueIdentifier>{164fdf90-a3a5-47ec-b74b-579f819a894e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\StageSelection">
+      <UniqueIdentifier>{de3b6ab8-fe48-44c0-b559-8146bc51aeb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="Source\FPS\FPS.cpp">
       <Filter>Source\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\StageSelection\StageSelection.cpp">
+      <Filter>Source\Scene\StageSelection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Source\FPS\FPS.h">
       <Filter>Source\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\StageSelection\StageSelection.h">
+      <Filter>Source\Scene\StageSelection</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
