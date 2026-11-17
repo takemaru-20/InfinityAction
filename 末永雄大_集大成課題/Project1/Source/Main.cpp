@@ -7,10 +7,14 @@
 #include "Collision/Collision.h"
 #include "Animation/Animation.h"
 #include "FPS/FPS.h"
+#include "GameSetting/GameSetting.h"
 
 //プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
+	SetOutApplicationLogValidFlag(FALSE);	//Log.txtを出力しない
+	ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
+
 	if (DxLib_Init() == -1)  //DXライブラリ初期化処理
 	{
 		return -1;           //エラーが起きたら直ちに終了

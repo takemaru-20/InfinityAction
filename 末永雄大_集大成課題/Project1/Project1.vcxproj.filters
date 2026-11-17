@@ -46,6 +46,9 @@
     <Filter Include="Source\Scene\StageSelection">
       <UniqueIdentifier>{de3b6ab8-fe48-44c0-b559-8146bc51aeb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Mouse">
+      <UniqueIdentifier>{2f6f86dc-0ef9-4114-9440-f45992f3f43a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\StageSelection\StageSelection.cpp">
       <Filter>Source\Scene\StageSelection</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mouse\Mouse.cpp">
+      <Filter>Source\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\StageSelection\StageSelection.h">
       <Filter>Source\Scene\StageSelection</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mouse\Mouse.h">
+      <Filter>Source\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
