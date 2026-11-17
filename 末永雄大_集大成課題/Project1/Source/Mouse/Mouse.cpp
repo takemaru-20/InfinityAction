@@ -1,5 +1,6 @@
 ﻿#include "Mouse.h"
 #include "../Scene/SceneManager.h"
+#include "../GameSetting/GameSetting.h"
 
 MosuePoint NowPoint;		//現在のマウスの位置
 MosuePoint OldPoint;		//以前のマウスの位置
@@ -84,6 +85,30 @@ void UpdateMouse()
 	//現在の情報を以前の情報として保存
 	MouseNowIntoOld();
 
-	//現在のマウスのクライアント座標の位置を取得
-	GetMousePoint(&NowPoint.pos.x, &NowPoint.pos.y);
+	int mouseX;
+	int mouseY;
+
+	GetMousePoint(&mouseX, &mouseY);
+
+	NowPoint.pos.x = mouseX;
+	NowPoint.pos.y = mouseY;
+
+	//もし、マウスの座標がゲーム画面外にあるなら、ゲーム画面内に収める
+	if (NowPoint.pos.x < 0) { NowPoint.pos.x = 0; }	//左
+	else if (NowPoint.pos.x > SCREEN_WIDTH) {NowPoint.pos.x = SCREEN_WIDTH;}	//右
+
+	if (NowPoint.pos.y < 0) { NowPoint.pos.y = 0; }	//左
+	else if (NowPoint.pos.y > SCREEN_WIDTH) { NowPoint.pos.y = SCREEN_WIDTH; }	//右
+
+	//マウスのボタン情報を一気に登録
+	Input = GetMouseInput();
+
+	//各ボタンを押しているかチェック
+	for (int i = 0; i < MouseKinMax; i++)
+	{
+
+	}
+
+	return;
+
 }
