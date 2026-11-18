@@ -30,26 +30,32 @@ void StepPlayScene()
 
 void UpdatePlayScene()
 {
-	PlayerData* player = GetPlayer();
+	//PlayerData* player = GetPlayer();
 
-	if (player->body.pos.x < 0.0f)
-	{
-		g_PlayData.pos.x += PLAYE_BG_SPPED;
+	//if (player->body.pos.x < 0.0f)
+	//{
+	//	//背景を左へ動かす
+	//	g_PlayData.pos.x += PLAYE_BG_SPPED;
 
-		if (g_PlayData.pos.x <= -PLAY_BG_WIDTH)
-		{
-			g_PlayData.pos.x += PLAY_BG_WIDTH;
-		}
-	}
+	//	//背景1枚分動いたら最初の位置に戻す
+	//	if (g_PlayData.pos.x <= -PLAY_BG_WIDTH)
+	//	{
+	//		g_PlayData.pos.x += PLAY_BG_WIDTH;
+	//	}
+	//}
 }
 
 void DrawPlayScene()
 {
+	PlayerData* player = GetPlayer();
+
+	float x = -1 * (int)player->body.pos.x % 1920;
+
 	//1枚目の背景
-	DrawGraph(g_PlayData.pos.x, 0, g_PlayData.handele, FALSE);
+	DrawGraph(x, 0, g_PlayData.handele, FALSE);
 
 	//1枚目の右側に2枚目を書き、隙間をなくす
-	DrawGraph((g_PlayData.pos.x + PLAY_BG_WIDTH),  0, g_PlayData.handele, FALSE);
+	DrawGraph((x + PLAY_BG_WIDTH),  0, g_PlayData.handele, FALSE);
 
 }
 
