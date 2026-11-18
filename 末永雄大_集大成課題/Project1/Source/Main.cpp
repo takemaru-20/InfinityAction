@@ -8,28 +8,32 @@
 #include "Animation/Animation.h"
 #include "FPS/FPS.h"
 #include "GameSetting/GameSetting.h"
+#include "Scene/Play/Play.h"
 
 //プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 	SetOutApplicationLogValidFlag(FALSE);	//Log.txtを出力しない
-	ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
+	//ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
 
 	if (DxLib_Init() == -1)  //DXライブラリ初期化処理
 	{
 		return -1;           //エラーが起きたら直ちに終了
 	}
+	InitPlayScene();
 	InitMap();
 	InitPlayer();
 	InitCamera();
 	InitEnemy();
 	InitAnimationEffect();
 	InitFPS();
-
+	
+	LoadPlayScene();
 	LoadMap();
 	LoadPlayer();
 	LoadEnemy();
 	LoadAnimationEffect();
+	
 
 	StartPlayer();
 	StarEnemy();
@@ -51,17 +55,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 		StepEnemy();
 		StepAnimationEffect();
 
+		UpdatePlayScene();
 		UpdatePlayer();
 		UpdateInput();
 		UpdateEnemy();
 		UpdateFPS();
 		
+		DrawPlayScene();
         DrawMap();
 		DrawPlayer();
 		DrawCamera();
 		DrawEnemy();
 		DrawAnimationEffect();
 		DrawFPS();
+		
 
 		//エスケープキーで終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) break;
@@ -72,9 +79,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 		FPSWait();
 	}
 
+	FinPlayScene();
 	FinPlayer();
 	FinEnemy();
 	FinAnimationEffect();
+	
 
 	DxLib_End();     //DXライブラリの終了処理
 
