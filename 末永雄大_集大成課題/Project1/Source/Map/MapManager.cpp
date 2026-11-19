@@ -71,16 +71,14 @@ void MoveWithMapCollision(Body* body)
 				if (body->move.x > 0.0f)
 				{
 					// 左に押し出す
-					body->pos.x -=
-						(body->pos.x + body->width) - block->pos.x;
+					body->pos.x -= (body->pos.x + body->width) - block->pos.x;
 				}
 
 				// 右からあたったか
 				else if (body->move.x < 0.0f)
 				{
 					// 右に押し出す
-					body->pos.x +=
-						(block->pos.x + block->width) - body->pos.x;
+					body->pos.x += (block->pos.x + block->width) - body->pos.x;
 				}
 
 				// 移動量は0にする
@@ -124,8 +122,7 @@ void MoveWithMapCollision(Body* body)
 				if (body->move.y > 0.0f)
 				{
 					// 上に押し出す
-					body->pos.y -=
-						(body->pos.y + body->height) - block->pos.y;
+					body->pos.y -= (body->pos.y + body->height) - block->pos.y;
 
 					// 空中フラグを折る
 					body->isAir = false;
@@ -135,8 +132,7 @@ void MoveWithMapCollision(Body* body)
 				else if (body->move.y < 0.0f)
 				{
 					// 下に押し出す
-					body->pos.y +=
-						(block->pos.y + block->height) - body->pos.y;
+					body->pos.y += (block->pos.y + block->height) - body->pos.y;
 				}
 
 				// 移動量は0にする

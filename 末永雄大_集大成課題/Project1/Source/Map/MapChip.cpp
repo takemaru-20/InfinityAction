@@ -9,11 +9,10 @@
 
 MapChipData g_MapChip[MAP_CHIP_Y_NUM][MAP_CHIP_X_NUM] = { 0 };
 
-
 void LoadMapChipData()
 {
 	FILE* fp;
-	if (fopen_s(&fp, "Data/Map/Map.bin", "rb") != 0) return;
+	fopen_s(&fp, "Data/Map/Map.bin", "rb");
 
 	for (int i = 0; i < MAP_CHIP_Y_NUM; i++)
 	{

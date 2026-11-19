@@ -14,9 +14,10 @@
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 	SetOutApplicationLogValidFlag(FALSE);	//Log.txtを出力しない
-	//ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
 
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR_DEPTH);
+
+	ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
 
 	if (DxLib_Init() == -1)  //DXライブラリ初期化処理
 	{

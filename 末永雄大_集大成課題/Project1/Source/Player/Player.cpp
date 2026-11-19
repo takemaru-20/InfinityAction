@@ -8,7 +8,8 @@
 //プレイヤー設定関連
 #define PLAYER_DEFAULT_POS_X (150.0f)
 #define PLAYER_DEFAULT_POS_Y (300.0f)
-#define PLAYER_MOVE_SPEED (1.5f)
+//#define PLAYER_MOVE_SPEED (1.5f)
+#define PLAYER_MOVE_SPEED (10.0f)
 
 //ジャンプ力
 #define PLAYER_JUMP_POWER (8.0f)

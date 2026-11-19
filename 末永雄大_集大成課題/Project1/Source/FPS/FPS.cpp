@@ -1,15 +1,15 @@
-#include "DxLib.h"
+ï»¿#include "DxLib.h"
 #include "FPS.h"
 
-//•½‹Ï‚ðŒvŽZ‚·‚éƒ^ƒCƒ~ƒ“ƒO(‘å‘Ì‚ÍFPS‚Æ“¯‚¶”‚ÅOK)
+//å¹³å‡ã‚’è¨ˆç®—ã™ã‚‹ã‚¿ã‚¤ãƒŸãƒ³ã‚°(å¤§ä½“ã¯FPSã¨åŒã˜æ•°ã§OK)
 #define FPS_SAMPLE_NUM (60) 
 
 //FPS
 #define FPS (60)
 
-int g_StartTime;	//‘ª’èŠJŽnŽž
-int g_Count;		//ƒJƒEƒ“ƒ^
-float g_Fps;		//Œ»Ý‚ÌFPS
+int g_StartTime;	//æ¸¬å®šé–‹å§‹æ™‚åˆ»
+int g_Count;		//ã‚«ã‚¦ãƒ³ã‚¿
+float g_Fps;		//ç¾åœ¨ã®FPS
 
 void InitFPS()
 {
@@ -20,13 +20,13 @@ void InitFPS()
 
 void UpdateFPS()
 {
-	//1ƒtƒŒ[ƒ€–Ú‚È‚çŽž‚ð‹L‰¯
+	//1ãƒ•ãƒ¬ãƒ¼ãƒ ç›®ãªã‚‰æ™‚åˆ»ã‚’è¨˜æ†¶
 	if (g_Count == 0)
 	{
 		g_StartTime = GetNowCount();
 	}
 
-	//ƒTƒ“ƒvƒ‹‚Æ“¯‚¶‰ñ”ƒtƒŒ[ƒ€‚ª‰ñ‚Á‚½‚ç•½‹Ï‚ðŒvŽZ‚·‚é
+	//ã‚µãƒ³ãƒ—ãƒ«ã¨åŒã˜å›žæ•°ãƒ•ãƒ¬ãƒ¼ãƒ ãŒå›žã£ãŸã‚‰å¹³å‡ã‚’è¨ˆç®—ã™ã‚‹
 	if (g_Count == FPS_SAMPLE_NUM)
 	{
 		int time = GetNowCount();
@@ -41,18 +41,18 @@ void UpdateFPS()
 
 void DrawFPS()
 {
-	DrawFormatString(0, 880, GetColor(255, 255, 255), "FPSy%.1fz", g_Fps);
+	DrawFormatString(0, 880, GetColor(0,0, 0), "FPSã€%.1fã€‘", g_Fps);
 }
 
 void FPSWait()
 {
-	//‚©‚©‚Á‚½ŽžŠÔ
+	//ã‹ã‹ã£ãŸæ™‚é–“
 	int takeTime = GetNowCount() - g_StartTime;
 
-	//‘Ò‹@ŽžŠÔ
+	//å¾…æ©Ÿæ™‚é–“
 	int waitTime = g_Count * 1000 / FPS - takeTime;
 
-	//‘Ò‹@
+	//å¾…æ©Ÿ
 	if (waitTime > 0)
 	{
 		Sleep(waitTime);

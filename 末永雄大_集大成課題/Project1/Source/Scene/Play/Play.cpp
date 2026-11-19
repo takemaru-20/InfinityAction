@@ -30,19 +30,6 @@ void StepPlayScene()
 
 void UpdatePlayScene()
 {
-	//PlayerData* player = GetPlayer();
-
-	//if (player->body.pos.x < 0.0f)
-	//{
-	//	//背景を左へ動かす
-	//	g_PlayData.pos.x += PLAYE_BG_SPPED;
-
-	//	//背景1枚分動いたら最初の位置に戻す
-	//	if (g_PlayData.pos.x <= -PLAY_BG_WIDTH)
-	//	{
-	//		g_PlayData.pos.x += PLAY_BG_WIDTH;
-	//	}
-	//}
 }
 
 void DrawPlayScene()
