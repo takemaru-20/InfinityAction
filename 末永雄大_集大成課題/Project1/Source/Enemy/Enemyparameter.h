@@ -81,6 +81,7 @@ struct EnemyCanData
 	VECTOR move;
 	bool active;
 	bool isMoveChange;
+	int timer;
 	const EnemyParameter* param;
 
 	int frameNum;

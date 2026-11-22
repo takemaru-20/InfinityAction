@@ -4,12 +4,15 @@
 #include "../GameSetting/GameSetting.h"
 #include "../Camera/Camera.h"
 #include "../Animation/Animation.h"
+#include "../Player/Player.h"
 
 // 変数
 EnemyCanData g_CanData[ENEMY_CAN_MAX] = { 0 };
 
 // 画像ハンドル
 int g_CanHandle = 0;
+
+
 
 void InitCan()
 {
@@ -23,6 +26,7 @@ void InitCan()
 		can->handle = 0;
 		can->isMoveChange = false;
 		can->param = nullptr;
+		can->timer = 16;
 
 		can->frameNum = 12;
 		can->frameWidth = 36;
@@ -92,7 +96,7 @@ void DrawCan()
 		// 切り取る画像のX座標
 		int srcX = animFrame * can->frameWidth;
 
-		// 歩行アニメーション描画
+		// アニメーション描画
 		DrawRectGraph((int)(can->pos.x - camera.pos.x), (int)(can->pos.y - camera.pos.y),
 			srcX, 0, can->frameWidth, can->frameHeight, can->handle, TRUE);
 	}

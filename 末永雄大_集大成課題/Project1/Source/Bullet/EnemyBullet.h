@@ -1,5 +1,13 @@
 ﻿#pragma once
 #include "BulletParameter.h"
+#include "../Collision/CollisionParameter.h"
+
+struct EnemyBullet
+{
+	Body body;		//当たり判定ボディ
+	bool active;	//生存フラグ
+
+};
 
 // 各ロジックごとの関数
 void InitEnemyBullet();
