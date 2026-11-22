@@ -49,7 +49,6 @@ void StarCan()
 void StepCan()
 {
 	EnemyCanData* can = g_CanData;
-
 	for (int i = 0; i < ENEMY_CAN_MAX; i++, can++)
 	{
 		// 死んでいたら何もしない
@@ -63,7 +62,6 @@ void StepCan()
 void UpdateCan()
 {
 	EnemyCanData* can = g_CanData;
-
 	for (int i = 0; i < ENEMY_CAN_MAX; i++, can++)
 	{
 		if (!can->active)

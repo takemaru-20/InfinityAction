@@ -17,7 +17,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _
 
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR_DEPTH);
 
-	ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
+	//ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
 
 	if (DxLib_Init() == -1)  //DXライブラリ初期化処理
 	{
