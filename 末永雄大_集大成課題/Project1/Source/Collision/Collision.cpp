@@ -8,264 +8,249 @@
 #include "../Enemy/Nyanone.h"
 #include "../Enemy/NyantwoJump.h"
 #include "../Enemy/Canthrowing.h"
+#include "../Bullet/EnemyBullet.h"
 
 // 矩形と点の当たり判定
-// 引数
-// squarePosX:矩形の左上X座標
-// squarePosY:矩形の左上Y座標
-// squareWidth:矩形の横幅
-// squareHeight:矩形の高さ
-// pointX:点のX座標
-// pointY:点のY座標
-// 戻り値
-// 当たっていればtrue
-bool CheckSquarePoint(float squarePosX, float squarePosY, float squareWidth, float squareHeight, float pointX, float pointY)
+bool CheckSquarePoint(float squarePosX, float squarePosY,
+    float squareWidth, float squareHeight, float pointX, float pointY)
 {
-	// 点のX座標が矩形の間にあるか
-	if (pointX >= squarePosX && pointX <= (squarePosX + squareWidth))
-	{
-		// 点のY座標が矩形の間にあるか
-		if (pointY >= squarePosY && (pointY <= squarePosY + squareHeight))
-		{
-			// 当たっている
-			return true;
-		}
-	}
+    // 点のX座標が矩形の間にあるか
+    if (pointX >= squarePosX && pointX <= squarePosX + squareWidth)
+    {
+        // 点のY座標が矩形の間にあるか
+        if (pointY >= squarePosY && pointY <= squarePosY + squareHeight)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 // 矩形と矩形の当たり判定
-// 引数
-// squareA_PosX:矩形Aの左上X座標
-// squareA_PosY:矩形Aの左上Y座標
-// squareA_Width:矩形Aの横幅
-// squareA_Height:矩形Aの高さ
-// squareB_PosX:矩形Bの左上X座標
-// squareB_PosY:矩形Bの左上Y座標
-// squareB_Width:矩形Bの横幅
-// squareB_Height:矩形Bの高さ
-// 戻り値
-// 当たっていればtrue
-bool CheckSquareSquare(float squareA_PosX, float squareA_PosY, float squareA_Width, float squareA_Height, float squareB_PosX, float squareB_PosY, float squareB_Width, float squareB_Height)
+bool CheckSquareSquare(float squareA_PosX, float squareA_PosY,
+    float squareA_Width, float squareA_Height, float squareB_PosX,
+    float squareB_PosY, float squareB_Width, float squareB_Height)
 {
-	// 矩形Aの各辺の位置を計算する
-	float leftA = squareA_PosX;
-	float rightA = squareA_PosX + squareA_Width;
-	float topA = squareA_PosY;
-	float bottomA = squareA_PosY + squareA_Height;
+    // 矩形Aの各辺の位置
+    float leftA = squareA_PosX;
+    float rightA = squareA_PosX + squareA_Width;
+    float topA = squareA_PosY;
+    float bottomA = squareA_PosY + squareA_Height;
 
-	// 矩形Bの各辺の位置を計算する
-	float leftB = squareB_PosX;
-	float rightB = squareB_PosX + squareB_Width;
-	float topB = squareB_PosY;
-	float bottomB = squareB_PosY + squareB_Height;
+    // 矩形Bの各辺の位置
+    float leftB = squareB_PosX;
+    float rightB = squareB_PosX + squareB_Width;
+    float topB = squareB_PosY;
+    float bottomB = squareB_PosY + squareB_Height;
 
-	// 左右の辺がめり込んでいるかチェック
-	if (rightA > leftB && leftA < rightB)
-	{
-		// 上下の片がめり込んでいるかチェック
-		if (bottomA > topB && topA < bottomB)
-		{
-			// 当たっている
-			return true;
-		}
-	}
+    // 左右と上下の両方が重なっているか
+    if (rightA > leftB && leftA < rightB)
+    {
+        if (bottomA > topB && topA < bottomB)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 // 円と点の当たり判定
-// 引数
-// circlePosX:円の中心座標（X）
-// circlePosY:円の中心座用（Y）
-// circleRadius:円の半径
-// pointX:点のX座標
-// pointY:点のY座標
-// 戻り値
-// 当たっていればtrue
-bool CheckCirclePoint(float circlePosX, float circlePosY, float circleRadius, float pointX, float pointY)
+bool CheckCirclePoint(float circlePosX, float circlePosY,
+    float circleRadius, float pointX, float pointY)
 {
-	// 円の中心から点までの距離を計算する
-	float distance = sqrtf((pointX - circlePosX) * (pointX - circlePosX) + (pointY - circlePosY) * (pointY - circlePosY));
+    // 円の中心から点までの距離
+    float distance = sqrtf(
+        (pointX - circlePosX) * (pointX - circlePosX)
+        + (pointY - circlePosY) * (pointY - circlePosY));
 
-	// 求めた距離が半径の長さ以下であれば当たっている
-	if (distance <= circleRadius)
-	{
-		return true;
-	}
+    if (distance <= circleRadius)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
-// 円と点の当たり判定
-// 引数
-// circleA_PosX:円Aの中心座標（X）
-// circleA_PosY:円Aの中心座用（Y）
-// circleA_Radius:円Aの半径
-// circleB_PosX:円Bの中心座標（X）
-// circleB_PosX:円Bの中心座用（Y）
-// circleB_Radius:円Bの半径
-// 戻り値
-// 当たっていればtrue
-bool CheckCircleCircle(float circleA_PosX, float circleA_PosY, float circleA_Radius, float circleB_PosX, float circleB_PosY, float circleB_Radius)
+// 円と円の当たり判定
+bool CheckCircleCircle(float circleA_PosX, float circleA_PosY,
+    float circleA_Radius, float circleB_PosX, float circleB_PosY,
+    float circleB_Radius)
 {
-	// 円の中心間の距離を計算する
-	float distance = sqrtf((circleB_PosX - circleA_PosX) * (circleB_PosX - circleA_PosX) + (circleB_PosY - circleA_PosY) * (circleB_PosY - circleA_PosY));
+    // 2つの円の中心間の距離
+    float distance = sqrtf(
+        (circleB_PosX - circleA_PosX) * (circleB_PosX - circleA_PosX)
+        + (circleB_PosY - circleA_PosY) * (circleB_PosY - circleA_PosY));
 
-	// 中心間の距離が2つの円の半径の合計以下であれば当たっている
-	if (distance <= (circleA_Radius + circleB_Radius))
-	{
-		return true;
-	}
+    if (distance <= circleA_Radius + circleB_Radius)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 void CheckPlayerone()
 {
-	PlayerData* player = GetPlayer();
-	EnemyNyanoneData* one = GetNyanone();
+    PlayerData* player = GetPlayer();
+    EnemyNyanoneData* one = GetNyanone();
 
-	// プレイヤーが生きているとき
-	if (player->active && !player->inviibie)
-	{
-		for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
-		{
-			// 敵が死んでいたら判定しない
-			if (!one->active)
-			{
-				continue;
-			}
+    // プレイヤーが生きていて、無敵時間中でないとき
+    if (player->active && !player->inviibie)
+    {
+        for (int i = 0; i < ENEMY_NYANONE_MAX; i++, one++)
+        {
+            if (!one->active)
+            {
+                continue;
+            }
 
-			// プレイヤーと敵の当たり判定
-			if (CheckSquareSquare(player->body.pos.x,player->body.pos.y,PLAYER_WIDTH,PLAYER_HEIGHT,
-				one->pos.x,one->pos.y,ENEMY_NYANONE_WIDTH,ENEMY_NYANONE_HEIGHT))
-			{
-				// プレイヤーの足元
-				float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+            if (CheckSquareSquare(
+                player->body.pos.x, player->body.pos.y,
+                PLAYER_WIDTH, PLAYER_HEIGHT,
+                one->pos.x, one->pos.y,
+                ENEMY_NYANONE_WIDTH, ENEMY_NYANONE_HEIGHT))
+            {
+                float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+                float enemyTop = one->pos.y;
 
-				// 敵の上側
-				float enemyTop = one->pos.y;
-
-				// プレイヤーが落下中で、敵の上側にいる
-				if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
-				{
-					// 敵を倒す
-					OneHitPlayer(i);
-
-					// 踏んだら少しジャンプ
-					player->body.move.y = -8;
-				}
-				else
-				{
-					// 横から当たったらプレイヤー死亡
-					PlayerHitEnemy();
-					return;
-				}
-			}
-		}
-	}
+                // プレイヤーが落下中で、敵の上側にいる
+                if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
+                {
+                    OneHitPlayer(i);
+                    player->body.move.y = -8;
+                }
+                else
+                {
+                    PlayerHitEnemy();
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void CheckPlayertwo()
 {
-	PlayerData* player = GetPlayer();
-	EnemyNyantwoData* two = GetNyantwo();
+    PlayerData* player = GetPlayer();
+    EnemyNyantwoData* two = GetNyantwo();
 
-	// プレイヤーが生きているとき
-	if (player->active && !player->inviibie)
-	{
-		for (int i = 0; i < ENEMY_NYANTWO_MAX; i++, two++)
-		{
-			// 敵が死んでいたら判定しない
-			if (!two->active)
-			{
-				continue;
-			}
+    // プレイヤーが生きていて、無敵時間中でないとき
+    if (player->active && !player->inviibie)
+    {
+        for (int i = 0; i < ENEMY_NYANTWO_MAX; i++, two++)
+        {
+            if (!two->active)
+            {
+                continue;
+            }
 
-			// プレイヤーと敵の当たり判定
-			if (CheckSquareSquare(player->body.pos.x, player->body.pos.y, PLAYER_WIDTH, PLAYER_HEIGHT,
-				two->pos.x, two->pos.y, ENEMY_NYANTWO_WIDTH, ENEMY_NYANTWO_HEIGHT))
-			{
-				// プレイヤーの足元
-				float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+            if (CheckSquareSquare(
+                player->body.pos.x, player->body.pos.y,
+                PLAYER_WIDTH, PLAYER_HEIGHT,
+                two->pos.x, two->pos.y,
+                ENEMY_NYANTWO_WIDTH, ENEMY_NYANTWO_HEIGHT))
+            {
+                float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+                float enemyTop = two->pos.y;
 
-				// 敵の上側
-				float enemyTop = two->pos.y;
-
-				// プレイヤーが落下中で、敵の上側にいる
-				if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
-				{
-					// 敵を倒す
-					TwoHitPlayer(i);
-
-					// 踏んだら少しジャンプ
-					player->body.move.y = -8;
-				}
-				else
-				{
-					// 横から当たったらプレイヤー死亡
-					PlayerHitEnemy();
-					return;
-				}
-			}
-		}
-	}
+                // プレイヤーが落下中で、敵の上側にいる
+                if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
+                {
+                    TwoHitPlayer(i);
+                    player->body.move.y = -8;
+                }
+                else
+                {
+                    PlayerHitEnemy();
+                    return;
+                }
+            }
+        }
+    }
 }
 
+// プレイヤーと缶を投げる敵本体の当たり判定
 void CheckPlayerCan()
 {
-	PlayerData* player = GetPlayer();
-	EnemyCanData* can = GetCan();
+    PlayerData* player = GetPlayer();
+    EnemyCanData* can = GetCan();
 
-	// プレイヤーが生きているとき
-	if (player->active && !player->inviibie)
-	{
-		for (int i = 0; i < ENEMY_CAN_MAX; i++, can++)
-		{
-			// 敵が死んでいたら判定しない
-			if (!can->active)
-			{
-				continue;
-			}
+    if (player->active && !player->inviibie)
+    {
+        for (int i = 0; i < ENEMY_CAN_MAX; i++, can++)
+        {
+            if (!can->active)
+            {
+                continue;
+            }
 
-			// プレイヤーと敵の当たり判定
-			if (CheckSquareSquare(player->body.pos.x, player->body.pos.y, PLAYER_WIDTH, PLAYER_HEIGHT,
-				can->pos.x, can->pos.y, ENEMY_CAN_WIDTH, ENEMY_CAN_HEIGHT))
-			{
-				// プレイヤーの足元
-				float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+            if (CheckSquareSquare(
+                player->body.pos.x, player->body.pos.y,
+                PLAYER_WIDTH, PLAYER_HEIGHT,
+                can->pos.x, can->pos.y,
+                ENEMY_CAN_WIDTH, ENEMY_CAN_HEIGHT))
+            {
+                float playerBottom = player->body.pos.y + PLAYER_HEIGHT;
+                float enemyTop = can->pos.y;
 
-				// 敵の上側
-				float enemyTop = can->pos.y;
-
-				// プレイヤーが落下中で、敵の上側にいる
-				if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
-				{
-					// 敵を倒す
-					CanHitPlayer(i);
-
-					// 踏んだら少しジャンプ
-					player->body.move.y = -8;
-				}
-				else
-				{
-					// 横から当たったらプレイヤー死亡
-					PlayerHitEnemy();
-					return;
-				}
-			}
-		}
-	}
+                // プレイヤーが落下中で、敵の上側にいる
+                if (player->body.move.y > 0 && playerBottom < enemyTop + 10)
+                {
+                    CanHitPlayer(i);
+                    player->body.move.y = -8;
+                }
+                else
+                {
+                    PlayerHitEnemy();
+                    return;
+                }
+            }
+        }
+    }
 }
 
+// プレイヤーと飛んでいる敵の弾の当たり判定
+static void CheckPlayerEnemyBullet()
+{
+    PlayerData* player = GetPlayer();
+    if (!player->active || player->inviibie)
+    {
+        return;
+    }
 
+    StraightBulletData* bullet = GetEnemyBullet();
 
+    for (int i = 0; i < STRAIGHT_BULLET_MAX; i++, bullet++)
+    {
+        if (!bullet->active || bullet->tag != BULLET_COLLISION_TAG_ENEMY)
+        {
+            continue;
+        }
+
+        // 弾の中心座標から、当たり判定に使う左上の座標を求める
+        float bulletLeft = bullet->body.pos.x - bullet->body.width * 0.5f;
+        float bulletTop = bullet->body.pos.y - bullet->body.height * 0.5f;
+
+        if (CheckSquareSquare(
+            player->body.pos.x, player->body.pos.y,
+            PLAYER_WIDTH, PLAYER_HEIGHT,
+            bulletLeft, bulletTop,
+            bullet->body.width, bullet->body.height))
+        {
+            // 当たった弾を消して、プレイヤーの被弾処理を呼ぶ
+            EnemyBulletHitPlayer(i);
+            PlayerHitEnemyBullet();
+            return;
+        }
+    }
+}
 
 void CheckCollison()
 {
-	CheckPlayerone();
-	CheckPlayertwo();
-	CheckPlayerCan();
+    CheckPlayerone();
+    CheckPlayertwo();
+    CheckPlayerCan();
+    CheckPlayerEnemyBullet();
 }

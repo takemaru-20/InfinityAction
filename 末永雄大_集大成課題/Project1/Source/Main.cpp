@@ -1,94 +1,97 @@
-﻿#include"DxLib.h" 
+﻿#include "DxLib.h"
 #include "Map/MapManager.h"
 #include "Player/Player.h"
 #include "Input/Input.h"
 #include "Camera/Camera.h"
 #include "Enemy/Enemy.h"
+#include "Bullet/BulletManager.h"
 #include "Collision/Collision.h"
 #include "Animation/Animation.h"
 #include "FPS/FPS.h"
 #include "GameSetting/GameSetting.h"
 #include "Scene/Play/Play.h"
 
-//プログラムの初めはWinMainから始まります
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
+// プログラムの初めはWinMainから始まります
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce,
+    _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-	SetOutApplicationLogValidFlag(FALSE);	//Log.txtを出力しない
+    SetOutApplicationLogValidFlag(FALSE); // Log.txtを出力しない
+    SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR_DEPTH);
 
-	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR_DEPTH);
+    // ChangeWindowMode(TRUE); // ウィンドウモードに設定（完成時消す）
 
-	//ChangeWindowMode(TRUE);					//ウィンドウモードに設定（完成時消す）
+    if (DxLib_Init() == -1)
+    {
+        return -1;
+    }
 
-	if (DxLib_Init() == -1)  //DXライブラリ初期化処理
-	{
-		return -1;           //エラーが起きたら直ちに終了
-	}
-	InitPlayScene();
-	InitMap();
-	InitPlayer();
-	InitCamera();
-	InitEnemy();
-	InitAnimationEffect();
-	InitFPS();
-	
-	LoadPlayScene();
-	LoadMap();
-	LoadPlayer();
-	LoadEnemy();
-	LoadAnimationEffect();
-	
+    InitPlayScene();
+    InitMap();
+    InitPlayer();
+    InitCamera();
+    InitEnemy();
+    InitBullet();
+    InitAnimationEffect();
+    InitFPS();
 
-	StartPlayer();
-	StarEnemy();
-	StartMap();
+    LoadPlayScene();
+    LoadMap();
+    LoadPlayer();
+    LoadEnemy();
+    LoadBullet();
+    LoadAnimationEffect();
 
-	//描画先を裏画面にする
-	SetDrawScreen (DX_SCREEN_BACK);
+    StartPlayer();
+    StarEnemy();
+    StartMap();
 
-    //ゲームのメインループ
-	while (ProcessMessage() >= 0)
-	{
-		//画面をクリア
-		ClearDrawScreen();
+    // 描画先を裏画面にする
+    SetDrawScreen(DX_SCREEN_BACK);
 
-		CheckCollison();
-		
-		StepPlayer();
-		StepCamera();
-		StepEnemy();
-		StepAnimationEffect();
+    // ゲームのメインループ
+    while (ProcessMessage() >= 0)
+    {
+        ClearDrawScreen();
 
-		UpdatePlayScene();
-		UpdatePlayer();
-		UpdateInput();
-		UpdateEnemy();
-		UpdateFPS();
-		
-		DrawPlayScene();
+        CheckCollison();
+
+        StepPlayer();
+        StepCamera();
+        StepEnemy();
+        StepBullet();
+        StepAnimationEffect();
+
+        UpdatePlayScene();
+        UpdatePlayer();
+        UpdateInput();
+        UpdateEnemy();
+        UpdateBullet();
+        UpdateFPS();
+
+        DrawPlayScene();
         DrawMap();
-		DrawPlayer();
-		DrawCamera();
-		DrawEnemy();
-		DrawAnimationEffect();
-		DrawFPS();
-		
+        DrawPlayer();
+        DrawCamera();
+        DrawEnemy();
+        DrawBullet();
+        DrawAnimationEffect();
+        DrawFPS();
 
-		//エスケープキーで終了
-		if (CheckHitKey(KEY_INPUT_ESCAPE)) break;
+        if (CheckHitKey(KEY_INPUT_ESCAPE))
+        {
+            break;
+        }
 
-		//画面フリップ
-		ScreenFlip();
+        ScreenFlip();
+        FPSWait();
+    }
 
-		FPSWait();
-	}
+    FinPlayScene();
+    FinPlayer();
+    FinEnemy();
+    FinBullet();
+    FinAnimationEffect();
 
-	FinPlayScene();
-	FinPlayer();
-	FinEnemy();
-	FinAnimationEffect();
-	
-
-	DxLib_End();     //DXライブラリの終了処理
-
-	return 0;       //ソフト終了
+    DxLib_End();
+    return 0;
 }
