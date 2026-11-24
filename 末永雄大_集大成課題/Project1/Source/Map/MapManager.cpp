@@ -1,4 +1,5 @@
-﻿#include "MapManager.h"
+﻿
+#include "MapManager.h"
 #include "MapParameter.h"
 #include "MapChip.h"
 #include "Block.h"
@@ -49,7 +50,8 @@ void MoveWithMapCollision(Body* body)
 
 			// NORMAL_BLOCKとSOIL_BLOCK、GRASS_BLOCK以外は当たり判定しない
 			if (mapChipData.mapChip != NORMAL_BLOCK && mapChipData.mapChip != SOIL_BLOCK
-				&& mapChipData.mapChip != GRASS_BLOCK)
+				&& mapChipData.mapChip != GRASS_BLOCK && mapChipData.mapChip != ASND_BLOCK
+				&& mapChipData.mapChip != ASNDNORMAL_BLOCK)
 			{
 				continue;
 			}
@@ -64,8 +66,8 @@ void MoveWithMapCollision(Body* body)
 			}
 
 			// 当たり判定
-			if (CheckSquareSquare(body->pos.x,body->pos.y,body->width,body->height,
-				block->pos.x,block->pos.y,block->width,block->height))
+			if (CheckSquareSquare(body->pos.x, body->pos.y, body->width, body->height,
+				block->pos.x, block->pos.y, block->width, block->height))
 			{
 				// 左からあたったか
 				if (body->move.x > 0.0f)
@@ -100,7 +102,8 @@ void MoveWithMapCollision(Body* body)
 
 			// NORMAL_BLOCKとSOIL_BLOCK、GRASS_BLOCK以外は当たり判定しない
 			if (mapChipData.mapChip != NORMAL_BLOCK && mapChipData.mapChip != SOIL_BLOCK
-				&& mapChipData.mapChip != GRASS_BLOCK)
+				&& mapChipData.mapChip != GRASS_BLOCK && mapChipData.mapChip != ASND_BLOCK
+				&& mapChipData.mapChip != ASNDNORMAL_BLOCK)
 			{
 				continue;
 			}
@@ -115,8 +118,8 @@ void MoveWithMapCollision(Body* body)
 			}
 
 			// 当たり判定
-			if (CheckSquareSquare(body->pos.x,body->pos.y,body->width,body->height,
-				block->pos.x,block->pos.y,block->width,block->height))
+			if (CheckSquareSquare(body->pos.x, body->pos.y, body->width, body->height,
+				block->pos.x, block->pos.y, block->width, block->height))
 			{
 				// 上からあたったか
 				if (body->move.y > 0.0f)

@@ -1,4 +1,5 @@
-﻿#include "DxLib.h"
+﻿
+#include "DxLib.h"
 #include "Play.h"
 #include "../../Player/Player.h"
 
@@ -15,9 +16,11 @@ void InitPlayScene()
 	g_PlayData.handele = 0;
 	g_PlayData.pos.x = 0.0f;
 }
+
 void LoadPlayScene()
 {
-	g_PlayData.handele = LoadGraph("Data/Scene/grassland.png");
+	//g_PlayData.handele = LoadGraph("Data/Scene/grassland.png");
+	g_PlayData.handele = LoadGraph("Data/Scene/desert.png");
 }
 
 void StartPlayScene()
@@ -42,8 +45,7 @@ void DrawPlayScene()
 	DrawGraph(x, 0, g_PlayData.handele, FALSE);
 
 	//1枚目の右側に2枚目を書き、隙間をなくす
-	DrawGraph((x + PLAY_BG_WIDTH),  0, g_PlayData.handele, FALSE);
-
+	DrawGraph((x + PLAY_BG_WIDTH), 0, g_PlayData.handele, FALSE);
 }
 
 void FinPlayScene()

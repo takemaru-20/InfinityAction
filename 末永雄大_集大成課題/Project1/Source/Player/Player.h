@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿
+#pragma once
 #include "../Map/MapParameter.h"
 #include "../Collision/CollisionParameter.h"
 

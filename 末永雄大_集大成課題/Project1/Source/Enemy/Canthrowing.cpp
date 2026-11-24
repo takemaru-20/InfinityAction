@@ -6,6 +6,7 @@
 #include "../Animation/Animation.h"
 #include "../Player/Player.h"
 #include "../Bullet/BulletManager.h"
+#include "../Sound/SoundManager.h"
 
 // 変数
 EnemyCanData g_CanData[ENEMY_CAN_MAX] = { 0 };
@@ -165,6 +166,9 @@ void CanHitPlayer(int index)
 
     if (!can->active) return;
 
+    // 敵の死亡音を再生
+    PlaySE(SE_ENEMY_DEAD);
+
     // 倒されたときのアニメーション
     PlayAnimationEffect(ENEMY_CAN_DEBT, can->pos.x, can->pos.y, 5);
 
@@ -177,6 +181,9 @@ void CanHitPlayerBullet(int index)
     EnemyCanData* can = &g_CanData[index];
 
     if (!can->active) return;
+
+    // 敵の死亡音を再生
+    PlaySE(SE_ENEMY_DEAD);
 
     // 倒されたときのアニメーション
     PlayAnimationEffect(ENEMY_CAN_DEBT, can->pos.x, can->pos.y, 5);

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "DxLib.h"
 
-#define BLOCK_MAX 7560
+#define BLOCK_MAX 6360
 #define MAP_CHIP_X_NUM (252)
 #define MAP_CHIP_Y_NUM (30)
 #define MAP_CHIP_WIDTH (25.0f)
@@ -9,16 +9,18 @@
 
 enum MapChipType
 {
-	MAP_CHIP_NONE,
-	GRASS_BLOCK,
-	NYANONE_SPAWN,
-	NYANTWO_SPAWN,
-	CAN_SPAWN,
-	SOIL_BLOCK,
-	NORMAL_BLOCK,
-	MAP_DOOR,
+	MAP_CHIP_NONE,		//0
+	GRASS_BLOCK,		//1
+	NYANONE_SPAWN,		//2
+	NYANTWO_SPAWN,		//3
+	CAN_SPAWN,			//4
+	SOIL_BLOCK,			//5
+	NORMAL_BLOCK,		//6
+	MAP_DOOR,			//7
+	ASND_BLOCK,			//8
+	ASNDNORMAL_BLOCK,	//9
 
-	BLOCK_TYPE_MAX,
+	BLOCK_TYPE_MAX
 };
 
 struct BlockData
@@ -35,13 +37,4 @@ struct MapChipData
 {
 	int mapChip;
 	BlockData* data;
-};
-
-// マップの種類
-enum MAP_TYPE
-{
-	MAP_STAGE1,        // 通常ステージ
-	MAP_STAGE1_BOSS,   // BOSS部屋
-
-	MAP_TYPE_MAX
 };

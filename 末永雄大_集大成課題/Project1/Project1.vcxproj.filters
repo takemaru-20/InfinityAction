@@ -49,6 +49,9 @@
     <Filter Include="Source\Mouse">
       <UniqueIdentifier>{2f6f86dc-0ef9-4114-9440-f45992f3f43a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\SoundManager">
+      <UniqueIdentifier>{25d12915-ac3a-465a-85bd-91b0cf0ec5b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="Source\Mouse\Mouse.cpp">
       <Filter>Source\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundManager.cpp">
+      <Filter>Source\SoundManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="Source\Mouse\Mouse.h">
       <Filter>Source\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundManager.h">
+      <Filter>Source\SoundManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

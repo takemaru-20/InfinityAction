@@ -10,6 +10,7 @@
 #include "FPS/FPS.h"
 #include "GameSetting/GameSetting.h"
 #include "Scene/Play/Play.h"
+#include "Sound/SoundManager.h"
 
 // プログラムの初めはWinMainから始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce,
@@ -40,6 +41,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce,
     LoadEnemy();
     LoadBullet();
     LoadAnimationEffect();
+    LoadBGM();
+    LoadSE();
 
     StartPlayer();
     StarEnemy();
@@ -91,6 +94,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce,
     FinEnemy();
     FinBullet();
     FinAnimationEffect();
+    FinBGM();
+    FinSE();
 
     DxLib_End();
     return 0;

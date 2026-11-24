@@ -12,20 +12,18 @@ MapChipData g_MapChip[MAP_CHIP_Y_NUM][MAP_CHIP_X_NUM] = { 0 };
 void LoadMapChipData()
 {
 	FILE* fp;
-	if (fopen_s(&fp, "Data/Map/Map.bin", "rb") != 0) return;
+	//if (fopen_s(&fp, "Data/Map/Map.bin", "rb") != 0) return;
+	if (fopen_s(&fp, "Data/Map/Map1.bin", "rb") != 0) return;
 
 	for (int i = 0; i < MAP_CHIP_Y_NUM; i++)
 	{
 		for (int j = 0; j < MAP_CHIP_X_NUM; j++)
 		{
-			//マップ情報は1バイトずつ保存されるので、
-			//fgetc関数でちょうど1バイト取得できる
 			int map = fgetc(fp);
 			g_MapChip[i][j].mapChip = map;
 		}
 	}
 }
-
 
 void CreateMap()
 {
@@ -68,7 +66,6 @@ void CreateMap()
 		}
 	}
 }
-
 
 MapChipData GetMapChipData(int x, int y)
 {

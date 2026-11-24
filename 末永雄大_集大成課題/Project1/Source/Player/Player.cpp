@@ -1,14 +1,15 @@
-﻿ #include "DxLib.h"
+﻿#include "DxLib.h"
 #include "Player.h"
 #include "../Input/Input.h"
 #include "../Camera/Camera.h"
 #include "../Map/MapManager.h"
 #include "../Collision/Collision.h"
+#include "../Sound/SoundManager.h"
 
 //プレイヤー設定関連
 #define PLAYER_DEFAULT_POS_X (150.0f)
 #define PLAYER_DEFAULT_POS_Y (300.0f)
-//#define PLAYER_MOVE_SPEED (1.5f)
+//#define PLAYER_MOVE_SPEED (2.0f)
 #define PLAYER_MOVE_SPEED (10.0f)		//Debugging
 
 //ジャンプ力
@@ -31,10 +32,13 @@ void InitPlayer()
 	g_PlayerData.body.height = PLAYER_HEIGHT;
 }
 
+
 void LoadPlayer()
 {
+	// プレイヤー画像を読み込む
 	g_PlayerData.handle = LoadGraph("Data/Player/Player_Normal.png");
 }
+
 
 void StartPlayer()
 {
@@ -70,7 +74,12 @@ void StepPlayer()
 	if (IsTriggerKey(KEY_UP))
 	{
 		g_PlayerData.body.move.y = -PLAYER_JUMP_POWER;
+
+		// ジャンプ音再生
+		PlaySE(SE_PLAYER_JUMP);
 	}
+
+
 }
 
 void UpdatePlayer()
@@ -93,30 +102,43 @@ void DrawPlayer()
 	DrawGraph(
 		(int)(g_PlayerData.body.pos.x - camera.pos.x),
 		(int)(g_PlayerData.body.pos.y - camera.pos.y),
-		g_PlayerData.handle,
-		TRUE
-	);
+		g_PlayerData.handle,TRUE);
 }
+
+
 
 void FinPlayer()
 {
+	// プレイヤー画像を解放
 	DeleteGraph(g_PlayerData.handle);
 }
+
 
 PlayerData* GetPlayer()
 {
 	return &g_PlayerData;
 }
 
+
 void PlayerDead()
 {
-	//プレイヤーを死亡状態にする
+	// すでに死亡している場合は何もしない
+	if (!g_PlayerData.active)
+	{
+		return;
+	}
+
+	// 死亡効果音を再生
+	PlaySE(SE_PLAYER_DEAD);
+
+	// プレイヤーを死亡状態にする
 	g_PlayerData.active = false;
 
-	//移動停止
+	// 移動停止
 	g_PlayerData.body.move.x = 0.0f;
 	g_PlayerData.body.move.y = 0.0f;
 }
+
 
 void PlayerHitEnemy()
 {
