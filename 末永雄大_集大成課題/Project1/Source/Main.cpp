@@ -1,4 +1,4 @@
-﻿#include "DxLib.h"
+#include "DxLib.h"
 #include "Map/MapManager.h"
 #include "Player/Player.h"
 #include "Input/Input.h"
@@ -66,6 +66,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstamce,
 
         UpdatePlayScene();
         UpdatePlayer();
+        UpdateMap();
         UpdateInput();
         UpdateEnemy();
         UpdateBullet();

@@ -24,6 +24,7 @@ void LoadBlock()
 	g_BlockHandle[MAP_DOOR] = LoadGraph("Data/Map/door.png");
 	g_BlockHandle[ASND_BLOCK] = LoadGraph("Data/Map/sand.png");
 	g_BlockHandle[ASNDNORMAL_BLOCK] = LoadGraph("Data/Map/sandBlock.png");
+	g_BlockHandle[ASNDTRIANGLE_BLOCK] = LoadGraph("Data/Map/sandtriangle .png");
 }
 
 void StartBlock()
