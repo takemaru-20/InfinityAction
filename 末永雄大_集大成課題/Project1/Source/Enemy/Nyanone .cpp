@@ -96,7 +96,8 @@ bool CheckNyanoneFloor(float x, float y)
             // 床ブロック以外は無視
             if (chip.mapChip != NORMAL_BLOCK &&
                 chip.mapChip != SOIL_BLOCK &&
-                chip.mapChip != GRASS_BLOCK)
+                chip.mapChip != GRASS_BLOCK &&
+                chip.mapChip != ASND_BLOCK)
             {
                 continue;
             }
