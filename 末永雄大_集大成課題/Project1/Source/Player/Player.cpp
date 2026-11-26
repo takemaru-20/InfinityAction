@@ -14,6 +14,8 @@
 
 //ジャンプ力
 #define PLAYER_JUMP_POWER (8.0f)
+// 流砂の中でのジャンプ力
+#define PLAYER_QUICKSAND_JUMP_POWER (2.5f)
 
 //重力
 #define PLAYER_GRAVITY (0.4f)
@@ -69,15 +71,26 @@ void StepPlayer()
 	{
 		g_PlayerData.body.move.x = -PLAYER_MOVE_SPEED;
 	}
-
-	//ジャンプ
+	
+	// ジャンプ
 	if (IsTriggerKey(KEY_UP))
 	{
-		g_PlayerData.body.move.y = -PLAYER_JUMP_POWER;
+			// 通常のジャンプ力
+			float jumpPower = PLAYER_JUMP_POWER;
 
-		// ジャンプ音再生
-		PlaySE(SE_PLAYER_JUMP);
+			// 流砂の中だけジャンプ力を下げる
+			if (IsPlayerInQuicksand())
+			{
+				jumpPower = PLAYER_QUICKSAND_JUMP_POWER;
+			}
+
+			// ジャンプ
+			g_PlayerData.body.move.y = -jumpPower;
+			//ジャンプ音SE
+			PlaySE(SE_PLAYER_JUMP);
+
 	}
+
 
 
 }

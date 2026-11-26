@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 #include "../Collision/CollisionParameter.h"
 
@@ -10,3 +10,6 @@ void DrawMap();
 void FinMap();
 
 void MoveWithMapCollision(Body* body);
+
+// プレイヤーが流砂の中にいるか
+bool IsPlayerInQuicksand();

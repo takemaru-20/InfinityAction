@@ -1,52 +1,38 @@
-
+﻿
 #include "MapManager.h"
 #include "MapParameter.h"
 #include "MapChip.h"
 #include "Block.h"
-#include "../Camera/Camera.h"
-#include <cmath>
-#include "../Player/Player.h"
 #include "../Collision/Collision.h"
+#include "../Player/Player.h"
 
 // キャラクターの周囲何マスまでチェックするか
 #define CHECK_ROUND_NUM (2)
 
-namespace
-{
-	constexpr int CollapseColumn = 23;
-	constexpr int CollapseRow = 17;
-	constexpr unsigned int CollapseDelayMs = 1000;
-	constexpr unsigned int CollapseAnimationMs = 450;
+// 流砂の沈む速さ
+#define QUICKSAND_SINK_SPEED (0.8f)
 
-	enum class CollapseState { Ready, Waiting, Falling, Broken };
+ // 崩れる砂ブロックの時間（ミリ秒）
+#define COLLAPSE_TIME (1000)
 
-	CollapseState collapseState = CollapseState::Broken;
-	unsigned int collapseStartedAt = 0;
-	float collapseProgress = 0.0f;
-	BlockData* collapseBlocks[9] = {};
+// 崩れる砂ブロックのタイマー
+bool g_CollapseStarted[BLOCK_MAX] = { false };
+int g_CollapseStartTime[BLOCK_MAX] = { 0 };
 
-	bool IsPlayerNearCollapse(const PlayerData& player)
-	{
-		if (!player.active) return false;
 
-		const Body& body = player.body;
-		for (const BlockData* block : collapseBlocks)
-		{
-			if (CheckSquareSquare(body.pos.x, body.pos.y, body.width, body.height,
-				block->pos.x - MAP_CHIP_WIDTH, block->pos.y - MAP_CHIP_HEIGHT - 1.0f,
-				3.0f * MAP_CHIP_WIDTH, 3.0f * MAP_CHIP_HEIGHT + 1.0f))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-}
 
 void InitMap()
 {
 	InitBlock();
+
+	// 崩れる砂ブロックの初期化
+	for (int i = 0; i < BLOCK_MAX; i++)
+	{
+		g_CollapseStarted[i] = false;
+		g_CollapseStartTime[i] = 0;
+	}
 }
+
 
 void LoadMap()
 {
@@ -57,89 +43,78 @@ void LoadMap()
 void StartMap()
 {
 	CreateMap();
-
-	collapseState = CollapseState::Broken;
-	int blockIndex = 0;
-	// 三角ブロックを起点に、下から順に1、3、5マスを登録する
-	for (int rowAbove = 0; rowAbove <= 2; ++rowAbove)
-	{
-		const MapChipType expected = rowAbove == 0 ? ASNDTRIANGLE_BLOCK : ASND_BLOCK;
-		for (int columnOffset = -rowAbove; columnOffset <= rowAbove; ++columnOffset)
-		{
-			const MapChipData chip = GetMapChipData(CollapseColumn + columnOffset, CollapseRow - rowAbove);
-			if (chip.mapChip != expected || !chip.data) return;
-			collapseBlocks[blockIndex++] = chip.data;
-		}
-	}
-	collapseState = CollapseState::Ready;
 }
+
 
 void UpdateMap()
 {
-	if (collapseState == CollapseState::Broken) return;
+	// プレイヤー取得
+	PlayerData* player = GetPlayer();
 
-	const unsigned int now = static_cast<unsigned int>(GetNowCount());
-	const unsigned int elapsed = now - collapseStartedAt;
-	if (collapseState == CollapseState::Falling)
+	// ブロック取得
+	BlockData* block = GetBlocks();
+
+	for (int i = 0; i < BLOCK_MAX; i++, block++)
 	{
-		if (elapsed >= CollapseAnimationMs)
+		// 使用していないブロックは無視
+		if (!block->active)
 		{
-			collapseState = CollapseState::Broken;
+			continue;
+		}
+
+		// 崩れる砂ブロック以外は無視
+		if (block->type != ASNDTRIANGLE_BLOCK)
+		{
+			continue;
+		}
+
+		// タイマーが始まっていない場合
+		if (!g_CollapseStarted[i])
+		{
+			// 死亡しているプレイヤーでは発動させない
+			if (!player->active)
+			{
+				continue;
+			}
+
+			// プレイヤーの足元
+			float playerBottom = player->body.pos.y + player->body.height;
+
+			// 横方向の重なり
+			bool hitX =
+				player->body.pos.x < block->pos.x + block->width &&
+				player->body.pos.x + player->body.width > block->pos.x;
+
+			// ブロックの上に乗っているか
+			bool hitY =
+				playerBottom >= block->pos.y - 2.0f &&
+				playerBottom <= block->pos.y + 3.0f;
+
+			if (hitX && hitY)
+			{
+				// タイマー開始
+				g_CollapseStarted[i] = true;
+				g_CollapseStartTime[i] = GetNowCount();
+			}
 		}
 		else
 		{
-			collapseProgress = static_cast<float>(elapsed) / CollapseAnimationMs;
+			// 経過時間
+			int elapsed = GetNowCount() - g_CollapseStartTime[i];
+
+			// 1秒経過したら消える
+			if (elapsed >= COLLAPSE_TIME)
+			{
+				block->active = false;
+			}
 		}
-		return;
-	}
-
-	if (!IsPlayerNearCollapse(*GetPlayer()))
-	{
-		collapseState = CollapseState::Ready;
-		return;
-	}
-
-	if (collapseState == CollapseState::Ready)
-	{
-		collapseStartedAt = now;
-		collapseState = CollapseState::Waiting;
-		return;
-	}
-
-	if (elapsed >= CollapseDelayMs)
-	{
-		// 当たり判定を消し、倒れる間だけ別に描画する
-		for (BlockData* block : collapseBlocks)
-		{
-			block->active = false;
-		}
-		collapseStartedAt = now;
-		collapseProgress = 0.0f;
-		collapseState = CollapseState::Falling;
 	}
 }
+
 
 void DrawMap()
 {
 	DrawBlock();
-	if (collapseState != CollapseState::Falling) return;
-
-	const CameraData camera = GetCamera();
-	const double angle = 1.57079632679 * collapseProgress;
-	const float fall = 52.0f * collapseProgress * collapseProgress;
-	const BlockData& bottom = *collapseBlocks[0];
-	const float pivotX = bottom.pos.x + bottom.width * 0.5f;
-	const float pivotY = bottom.pos.y + bottom.height;
-	const double sine = std::sin(angle);
-	const double cosine = std::cos(angle);
-	for (const BlockData* block : collapseBlocks)
-	{
-		const float offsetX = block->pos.x + block->width * 0.5f - pivotX;
-		const float offsetY = block->pos.y + block->height * 0.5f - pivotY;
-		const double screenX = pivotX - camera.pos.x + offsetX * cosine - offsetY * sine;
-		const double screenY = pivotY - camera.pos.y + fall + offsetX * sine + offsetY * cosine;
-		DrawRotaGraph(static_cast<int>(screenX), static_cast<int>(screenY), 1.0, angle, block->handle, TRUE);
-	}
 }
 
 void FinMap()
@@ -159,10 +134,12 @@ void MoveWithMapCollision(Body* body)
 			// マップチップ取得
 			MapChipData mapChipData = GetMapChipData(x, y);
 
-			// NORMAL_BLOCKとSOIL_BLOCK、GRASS_BLOCK以外は当たり判定しない
-			if (mapChipData.mapChip != NORMAL_BLOCK && mapChipData.mapChip != SOIL_BLOCK
-				&& mapChipData.mapChip != GRASS_BLOCK && mapChipData.mapChip != ASND_BLOCK
-				&& mapChipData.mapChip != ASNDNORMAL_BLOCK)
+			if (mapChipData.mapChip != NORMAL_BLOCK &&
+				mapChipData.mapChip != SOIL_BLOCK &&
+				mapChipData.mapChip != GRASS_BLOCK &&
+				mapChipData.mapChip != ASND_BLOCK &&
+				mapChipData.mapChip != ASNDNORMAL_BLOCK &&
+				mapChipData.mapChip != COLLAPSE_SAND_BLOCK)
 			{
 				continue;
 			}
@@ -199,6 +176,77 @@ void MoveWithMapCollision(Body* body)
 			}
 		}
 	}
+
+
+	// 流砂の当たり判定
+	bool inQuicksand = false;
+	float quicksandTop = 0.0f;
+
+	// プレイヤーだけ流砂の処理をする
+	PlayerData* player = GetPlayer();
+
+	if (body == &player->body && player->active)
+	{
+		// 上昇中は沈ませない
+		if (body->move.y >= 0.0f)
+		{
+			for (int y = 0; y < MAP_CHIP_Y_NUM; y++)
+			{
+				for (int x = 0; x < MAP_CHIP_X_NUM; x++)
+				{
+					MapChipData mapChipData = GetMapChipData(x, y);
+
+					// 流砂以外は無視
+					if (mapChipData.mapChip != QUICKSAND_BLOCK)
+					{
+						continue;
+					}
+
+					BlockData* block = mapChipData.data;
+
+					if (block == nullptr || !block->active)
+					{
+						continue;
+					}
+
+					// プレイヤーの足元
+					float playerBottom =
+						body->pos.y + body->height;
+
+					// 横方向に重なっているか
+					bool hitX =
+						body->pos.x < block->pos.x + block->width &&
+						body->pos.x + body->width > block->pos.x;
+
+					// 流砂の表面に到達しているか
+					bool hitY =
+						playerBottom + body->move.y >= block->pos.y &&
+						playerBottom <= block->pos.y + block->height &&
+						body->pos.y < block->pos.y;
+
+					if (hitX && hitY)
+					{
+						inQuicksand = true;
+						quicksandTop = block->pos.y;
+
+						// ゆっくり沈ませる
+						body->move.y = QUICKSAND_SINK_SPEED;
+
+						// 空中扱いにする
+						body->isAir = true;
+
+						break;
+					}
+				}
+
+				if (inQuicksand)
+				{
+					break;
+				}
+			}
+		}
+	}
+
 
 	// Y軸だけ移動する
 	body->pos.y += body->move.y;
@@ -255,3 +303,55 @@ void MoveWithMapCollision(Body* body)
 		}
 	}
 }
+
+
+bool IsPlayerInQuicksand()
+{
+	PlayerData* player = GetPlayer();
+
+	if (!player->active)
+	{
+		return false;
+	}
+
+	Body* body = &player->body;
+
+	for (int y = 0; y < MAP_CHIP_Y_NUM; y++)
+	{
+		for (int x = 0; x < MAP_CHIP_X_NUM; x++)
+		{
+			MapChipData chip = GetMapChipData(x, y);
+
+			if (chip.mapChip != QUICKSAND_BLOCK)
+			{
+				continue;
+			}
+
+			BlockData* block = chip.data;
+
+			if (block == nullptr || !block->active)
+			{
+				continue;
+			}
+
+			// 横方向の重なり
+			bool hitX =
+				body->pos.x < block->pos.x + block->width &&
+				body->pos.x + body->width > block->pos.x;
+
+			// 足元が流砂に入っているか
+			float playerBottom = body->pos.y + body->height;
+
+			bool hitY = playerBottom >= block->pos.y &&
+				body->pos.y < block->pos.y + block->height;
+
+			if (hitX && hitY)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
