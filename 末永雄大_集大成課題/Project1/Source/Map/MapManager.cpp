@@ -1,10 +1,14 @@
-﻿
-#include "MapManager.h"
+﻿#include "MapManager.h"
 #include "MapParameter.h"
 #include "MapChip.h"
 #include "Block.h"
 #include "../Collision/Collision.h"
 #include "../Player/Player.h"
+#include "../Camera/Camera.h"
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <vector>
 
 // キャラクターの周囲何マスまでチェックするか
 #define CHECK_ROUND_NUM (2)
@@ -12,27 +16,30 @@
 // 流砂の沈む速さ
 #define QUICKSAND_SINK_SPEED (0.8f)
 
- // 崩れる砂ブロックの時間（ミリ秒）
+// 崩れる砂ブロックの時間（ミリ秒）
 #define COLLAPSE_TIME (1000)
 
-// 崩れる砂ブロックのタイマー
-bool g_CollapseStarted[BLOCK_MAX] = { false };
-int g_CollapseStartTime[BLOCK_MAX] = { 0 };
+namespace
+{
+	constexpr unsigned int COLLAPSE_FALL_TIME = 450;
 
+	enum class CollapseState { Ready, Waiting, Falling, Finished };
 
+	struct CollapseGroup
+	{
+		std::array<BlockData*, 9> blocks = {};
+		CollapseState state = CollapseState::Ready;
+		unsigned int startedAt = 0;
+		float progress = 0.0f;
+	};
+
+	std::vector<CollapseGroup> g_CollapseGroups;
+}
 
 void InitMap()
 {
 	InitBlock();
-
-	// 崩れる砂ブロックの初期化
-	for (int i = 0; i < BLOCK_MAX; i++)
-	{
-		g_CollapseStarted[i] = false;
-		g_CollapseStartTime[i] = 0;
-	}
 }
-
 
 void LoadMap()
 {
@@ -43,78 +50,101 @@ void LoadMap()
 void StartMap()
 {
 	CreateMap();
-}
+	g_CollapseGroups.clear();
 
-
-void UpdateMap()
-{
-	// プレイヤー取得
-	PlayerData* player = GetPlayer();
-
-	// ブロック取得
-	BlockData* block = GetBlocks();
-
-	for (int i = 0; i < BLOCK_MAX; i++, block++)
+	for (int y = 2; y < MAP_CHIP_Y_NUM; ++y)
 	{
-		// 使用していないブロックは無視
-		if (!block->active)
+		for (int x = 2; x < MAP_CHIP_X_NUM - 2; ++x)
 		{
-			continue;
-		}
-
-		// 崩れる砂ブロック以外は無視
-		if (block->type != ASNDTRIANGLE_BLOCK)
-		{
-			continue;
-		}
-
-		// タイマーが始まっていない場合
-		if (!g_CollapseStarted[i])
-		{
-			// 死亡しているプレイヤーでは発動させない
-			if (!player->active)
+			const MapChipData base = GetMapChipData(x, y);
+			if (base.mapChip != ASNDTRIANGLE_BLOCK || !base.data || !base.data->active)
 			{
 				continue;
 			}
 
-			// プレイヤーの足元
-			float playerBottom = player->body.pos.y + player->body.height;
+			CollapseGroup group;
+			group.blocks[0] = base.data;
+			int count = 1;
 
-			// 横方向の重なり
-			bool hitX =
-				player->body.pos.x < block->pos.x + block->width &&
-				player->body.pos.x + player->body.width > block->pos.x;
-
-			// ブロックの上に乗っているか
-			bool hitY =
-				playerBottom >= block->pos.y - 2.0f &&
-				playerBottom <= block->pos.y + 3.0f;
-
-			if (hitX && hitY)
+			// 10番の1段上に9番が3個、2段上に8番が5個ある組を登録する
+			for (int rowAbove = 1; rowAbove <= 2; ++rowAbove)
 			{
-				// タイマー開始
-				g_CollapseStarted[i] = true;
-				g_CollapseStartTime[i] = GetNowCount();
+				const MapChipType expected = rowAbove == 1 ? ASNDNORMAL_BLOCK : ASND_BLOCK;
+				for (int offset = -rowAbove; offset <= rowAbove; ++offset)
+				{
+					const MapChipData chip = GetMapChipData(x + offset, y - rowAbove);
+					if (chip.mapChip == expected && chip.data && chip.data->active)
+					{
+						group.blocks[count++] = chip.data;
+					}
+				}
 			}
-		}
-		else
-		{
-			// 経過時間
-			int elapsed = GetNowCount() - g_CollapseStartTime[i];
 
-			// 1秒経過したら消える
-			if (elapsed >= COLLAPSE_TIME)
+			if (count == group.blocks.size())
 			{
-				block->active = false;
+				g_CollapseGroups.push_back(group);
 			}
 		}
 	}
 }
 
+void UpdateMap()
+{
+	const unsigned int now = static_cast<unsigned int>(GetNowCount());
+	for (CollapseGroup& group : g_CollapseGroups)
+	{
+		const unsigned int elapsed = now - group.startedAt;
+		if (group.state == CollapseState::Waiting && elapsed >= COLLAPSE_TIME)
+		{
+			// 倒れ始めたら足場の当たり判定を外し、描画だけ続ける
+			for (BlockData* block : group.blocks)
+			{
+				block->active = false;
+			}
+			group.startedAt = now;
+			group.state = CollapseState::Falling;
+		}
+		else if (group.state == CollapseState::Falling)
+		{
+			if (elapsed >= COLLAPSE_FALL_TIME)
+			{
+				group.state = CollapseState::Finished;
+			}
+			else
+			{
+				group.progress = static_cast<float>(elapsed) / COLLAPSE_FALL_TIME;
+			}
+		}
+	}
+}
 
 void DrawMap()
 {
 	DrawBlock();
+	const CameraData camera = GetCamera();
+	for (const CollapseGroup& group : g_CollapseGroups)
+	{
+		if (group.state != CollapseState::Falling)
+		{
+			continue;
+		}
+
+		const BlockData* base = group.blocks[0];
+		const float pivotX = base->pos.x + base->width * 0.5f;
+		const float pivotY = base->pos.y + base->height;
+		const float angle = DX_PI_F * 0.5f * group.progress * group.progress;
+		const float sine = std::sin(angle);
+		const float cosine = std::cos(angle);
+
+		for (const BlockData* block : group.blocks)
+		{
+			const float x = block->pos.x + block->width * 0.5f - pivotX;
+			const float y = block->pos.y + block->height * 0.5f - pivotY;
+			const int screenX = static_cast<int>(pivotX + x * cosine - y * sine - camera.pos.x);
+			const int screenY = static_cast<int>(pivotY + x * sine + y * cosine - camera.pos.y);
+			DrawRotaGraph(screenX, screenY, 1.0, angle, block->handle, TRUE);
+		}
+	}
 }
 
 void FinMap()
@@ -285,6 +315,21 @@ void MoveWithMapCollision(Body* body)
 				{
 					// 上に押し出す
 					body->pos.y -= (body->pos.y + body->height) - block->pos.y;
+
+					// プレイヤーが着地した砂の山だけタイマーを開始する
+					if (body == &GetPlayer()->body)
+					{
+						for (CollapseGroup& group : g_CollapseGroups)
+						{
+							if (group.state == CollapseState::Ready &&
+								std::find(group.blocks.begin(), group.blocks.end(), block) != group.blocks.end())
+							{
+								group.startedAt = static_cast<unsigned int>(GetNowCount());
+								group.state = CollapseState::Waiting;
+								break;
+							}
+						}
+					}
 
 					// 空中フラグを折る
 					body->isAir = false;
